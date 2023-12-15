@@ -53,7 +53,7 @@ all.df.final <- all.df %>%
       party == "DEM" ~ "Democratic",
       party == "REP" ~ "Republican",
       party == "LIB" ~ "Libertarian",
-      party == "WGR" ~ "Wisconsin Greens",
+      party == "WGR" ~ "Wisconsin Green",
       party == "IND" ~ "Independent",
       party == "IND2" ~ "Independent 2",
       party == "CON" ~ "Constitution",

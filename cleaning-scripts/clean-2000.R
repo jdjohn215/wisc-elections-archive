@@ -38,7 +38,7 @@ pres.2000.clean <- pres.2000.orig %>%
       name == "al_gore_joe_lieberman_democratic" ~ "Democratic",
       name == "harry_browne_art_olivier_libertarian" ~ "Libertarian",
       name == "h_phillips_j_c_frazier_constitution" ~ "Constitution",
-      name == "ralph_nader_winona_la_duke_wisconsin_greens" ~ "Wisconsin Greens",
+      name == "ralph_nader_winona_la_duke_wisconsin_greens" ~ "Wisconsin Green",
       name == "m_moorehead_gloria_la_riva_independent" ~ "Independent",
       name == "james_harris_m_trowe_independent" ~ "Independent 2",
       name == "john_hagelin_nat_goldhaber_independent" ~ "Independent 3",

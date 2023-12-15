@@ -22,12 +22,14 @@ gov.2010.colnames <- readxl::read_excel("original-data/2010-11-02_Fall_General_A
 
 gov.2010.orig <- readxl::read_excel("original-data/2010-11-02_Fall_General_All_Races_Ward_by_Ward.xls",
                                     sheet = 2, skip = 11,
-                                    col_names = c("county", "rep_unit", gov.2010.colnames))
-
-gov.2010.clean <- gov.2010.orig %>%
+                                    col_names = c("county", "rep_unit", gov.2010.colnames)) %>%
   mutate(county = zoo::na.locf(county)) %>%
   janitor::clean_names() %>%
-  select(-c(na_na_6, na_na_9)) %>%
+  janitor::remove_empty("cols") %>%
+  filter(str_detect(rep_unit, "County Totals", negate = T),
+         !is.na(rep_unit))
+
+gov.2010.clean <- gov.2010.orig %>%
   pivot_longer(cols = -c(1:3), values_to = "votes") %>%
   mutate(
     candidate = case_when(
@@ -81,12 +83,14 @@ sen.2010.colnames <- readxl::read_excel("original-data/2010-11-02_Fall_General_A
 
 sen.2010.orig <- readxl::read_excel("original-data/2010-11-02_Fall_General_All_Races_Ward_by_Ward.xls",
                                     sheet = 6, skip = 11,
-                                    col_names = c("county", "rep_unit", sen.2010.colnames))
-
-sen.2010.clean <- sen.2010.orig %>%
+                                    col_names = c("county", "rep_unit", sen.2010.colnames)) %>%
   mutate(county = zoo::na.locf(county)) %>%
   janitor::clean_names() %>%
-  select(-c(na_na_6, na_na_9)) %>%
+  janitor::remove_empty("cols") %>%
+  filter(str_detect(rep_unit, "County Totals", negate = T),
+         !is.na(rep_unit))
+
+sen.2010.clean <- sen.2010.orig %>%
   pivot_longer(cols = -c(1:3), values_to = "votes") %>%
   mutate(
     candidate = case_when(

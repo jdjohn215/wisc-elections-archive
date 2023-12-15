@@ -26,7 +26,9 @@ pres.2012.orig <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls"
                                     col_names = c("county", "rep_unit", pres.2012.colnames)) %>%
   mutate(county = zoo::na.locf(county)) %>%
   janitor::clean_names() %>%
-  janitor::remove_empty("cols")
+  janitor::remove_empty("cols") %>%
+  filter(str_detect(rep_unit, "County Totals", negate = T),
+         !is.na(rep_unit))
 
 pres.2012.clean <- pres.2012.orig %>%
   pivot_longer(cols = -c(1:3), values_to = "votes") %>%
@@ -87,7 +89,9 @@ sen.2012.orig <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
                                     col_names = c("county", "rep_unit", sen.2012.colnames)) %>%
   mutate(county = zoo::na.locf(county)) %>%
   janitor::clean_names() %>%
-  janitor::remove_empty("cols")
+  janitor::remove_empty("cols") %>%
+  filter(str_detect(rep_unit, "County Totals", negate = T),
+         !is.na(rep_unit))
 
 sen.2012.clean <- sen.2012.orig %>%
   pivot_longer(cols = -c(1:3), values_to = "votes") %>%
@@ -177,25 +181,25 @@ con.2012.clean <- all.dist.orig %>%
       name == "na_scattering" ~ "Scattering"
     ),
     party = case_when(
-      name == "dem_rob_zerban" ~ "Democrat",
+      name == "dem_rob_zerban" ~ "Democratic",
       name == "ind_keith_deschler" ~ "Independent",
       name == "rep_paul_ryan" ~ "Republican",
-      name == "dem_mark_pocan" ~ "Democrat",
+      name == "dem_mark_pocan" ~ "Democratic",
       name == "ind_joe_kopsick_write_in" ~ "Write-in",
       name == "rep_chad_lee" ~ "Republican",
-      name == "dem_ron_kind" ~ "Democrat",
+      name == "dem_ron_kind" ~ "Democratic",
       name == "rep_ray_boland" ~ "Republican",
-      name == "dem_gwen_moore" ~ "Democrat",
+      name == "dem_gwen_moore" ~ "Democratic",
       name == "ind_robert_r_raymond" ~ "Independent",
       name == "rep_dan_sebring" ~ "Republican",
-      name == "dem_dave_heaster" ~ "Democrat",
+      name == "dem_dave_heaster" ~ "Democratic",
       name == "rep_f_james_sensenbrenner_jr" ~ "Republican",
-      name == "dem_joe_kallas" ~ "Democrat",
+      name == "dem_joe_kallas" ~ "Democratic",
       name == "rep_tom_petri" ~ "Republican",
-      name == "dem_pat_kreitlow" ~ "Democrat",
+      name == "dem_pat_kreitlow" ~ "Democratic",
       name == "ind_dale_c_lehner_write_in" ~ "Write-in",
       name == "rep_sean_duffy" ~ "Republican",
-      name == "dem_jamie_wall" ~ "Democrat",
+      name == "dem_jamie_wall" ~ "Democratic",
       name == "rep_reid_j_ribble" ~ "Republican",
       name == "na_scattering" ~ "Scattering")
   ) %>%
@@ -219,7 +223,7 @@ con.2012.clean %>%
 # Combine
 all.2012 <- bind_rows(
   pres.2012.clean %>%
-    mutate(office = "governor") %>%
+    mutate(office = "president") %>%
     select(county = county, municipality = municipality_name, ctv = municipality_type,
            reporting_unit = reporting_unit_name, office, party, candidate, votes),
   con.2012.clean %>%

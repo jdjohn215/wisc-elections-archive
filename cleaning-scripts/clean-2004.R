@@ -42,7 +42,7 @@ pres.2004.clean <- pres.2004.orig %>%
       name == "john_edwards_john_f_kerry_democratic" ~ "Democratic",
       name == "dick_cheney_george_w_bush_republican" ~ "Republican",
       name == "richard_v_campagna_michael_badnarik_libertarian" ~ "Libertarian",
-      name == "patricia_la_marche_david_cobb_wisconsin_greens" ~ "Wisconsin Greens",
+      name == "patricia_la_marche_david_cobb_wisconsin_greens" ~ "Wisconsin Green",
       name == "peter_miguel_camejo_ralph_nader_independent" ~ "Independent",
       name == "margaret_trowe_james_harris_independent" ~ "Independent 2",
       name == "mary_alice_herbert_walter_f_brown_independent" ~ "Independent 3",
@@ -127,7 +127,8 @@ all.2004 <- bind_rows(
     select(county = county_name, municipality = municipality_name, ctv = municipality_type,
            reporting_unit = reporting_unit_name, office, party, candidate, votes)
 ) %>%
-  mutate(year = 2004) %>%
+  mutate(year = 2004,
+         votes = str_remove(votes, coll(","))) %>%
   select(county, municipality, ctv, reporting_unit, year, office, district,
          party, candidate, votes)
 

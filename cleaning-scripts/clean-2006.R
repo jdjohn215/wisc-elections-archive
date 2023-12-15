@@ -36,7 +36,7 @@ gov.2006.clean <- gov.2006.orig %>%
     party = case_when(
       name == "jim_doyle_barbara_c_lawton_democratic" ~ "Democratic",
       name == "mark_green_jean_hundertmark_republican" ~ "Republican",
-      name == "nelson_eisman_leon_todd_wisconsin_green" ~ "Wisconsin Greens",
+      name == "nelson_eisman_leon_todd_wisconsin_green" ~ "Wisconsin Green",
       name == "scattering_na" ~ "Scattering")
   )
 
