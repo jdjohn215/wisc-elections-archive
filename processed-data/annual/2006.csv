@@ -32066,6 +32066,9 @@ Wood,Wisconsin Rapids,City,Wards 21 - 23,2006,senate,NA,Republican,Robert Gerald
 Wood,Wisconsin Rapids,City,Wards 21 - 23,2006,senate,NA,Wisconsin Green,Rae Vogeler,14
 Wood,Wisconsin Rapids,City,Wards 21 - 23,2006,senate,NA,Independent,Ben J Glatzel,8
 Wood,Wisconsin Rapids,City,Wards 21 - 23,2006,senate,NA,Scattering,Scattering,0
+Kenosha,Brighton,Town,Wards 1 - 3,2006,congress,1,Democratic,Jeffrey C Thomas,167
+Kenosha,Brighton,Town,Wards 1 - 3,2006,congress,1,Republican,Paul Ryan,488
+Kenosha,Brighton,Town,Wards 1 - 3,2006,congress,1,Scattering,Scattering,1
 Kenosha,Bristol,Town,Wards 1 - 4 & 8,2006,congress,1,Democratic,Jeffrey C Thomas,307
 Kenosha,Bristol,Town,Wards 1 - 4 & 8,2006,congress,1,Republican,Paul Ryan,781
 Kenosha,Bristol,Town,Wards 1 - 4 & 8,2006,congress,1,Scattering,Scattering,5
@@ -32909,6 +32912,9 @@ Waukesha,New Berlin,City,Ward 15,2006,congress,1,Scattering,Scattering,0
 Waukesha,New Berlin,City,Ward 16,2006,congress,1,Democratic,Jeffrey C Thomas,161
 Waukesha,New Berlin,City,Ward 16,2006,congress,1,Republican,Paul Ryan,379
 Waukesha,New Berlin,City,Ward 16,2006,congress,1,Scattering,Scattering,0
+Columbia,Arlington,Town,Wards 1 & 2,2006,congress,2,Democratic,Tammy Baldwin,174
+Columbia,Arlington,Town,Wards 1 & 2,2006,congress,2,Republican,Dave Magnum,168
+Columbia,Arlington,Town,Wards 1 & 2,2006,congress,2,Scattering,Scattering,0
 Columbia,Caledonia,Town,Wards 1 & 2,2006,congress,2,Democratic,Tammy Baldwin,286
 Columbia,Caledonia,Town,Wards 1 & 2,2006,congress,2,Republican,Dave Magnum,313
 Columbia,Caledonia,Town,Wards 1 & 2,2006,congress,2,Scattering,Scattering,0
@@ -34085,6 +34091,9 @@ Walworth,Whitewater,City,Wards 5 & 6,2006,congress,2,Scattering,Scattering,0
 Walworth,Whitewater,City,Wards 7 & 8,2006,congress,2,Democratic,Tammy Baldwin,465
 Walworth,Whitewater,City,Wards 7 & 8,2006,congress,2,Republican,Dave Magnum,286
 Walworth,Whitewater,City,Wards 7 & 8,2006,congress,2,Scattering,Scattering,6
+Buffalo,Alma,Town,Ward 1,2006,congress,3,Democratic,Ron Kind,102
+Buffalo,Alma,Town,Ward 1,2006,congress,3,Republican,Paul R Nelson,44
+Buffalo,Alma,Town,Ward 1,2006,congress,3,Scattering,Scattering,0
 Buffalo,Belvidere,Town,Ward 1,2006,congress,3,Democratic,Ron Kind,140
 Buffalo,Belvidere,Town,Ward 1,2006,congress,3,Republican,Paul R Nelson,75
 Buffalo,Belvidere,Town,Ward 1,2006,congress,3,Scattering,Scattering,0
@@ -35951,6 +35960,9 @@ Vernon,Viroqua,City,Wards 1 - 9,2006,congress,3,Scattering,Scattering,1
 Vernon,Westby,City,Wards 1 - 5,2006,congress,3,Democratic,Ron Kind,546
 Vernon,Westby,City,Wards 1 - 5,2006,congress,3,Republican,Paul R Nelson,190
 Vernon,Westby,City,Wards 1 - 5,2006,congress,3,Scattering,Scattering,1
+Milwaukee,West Milwaukee,Village,"Wards 1, 2 & 5",2006,congress,4,Democratic,Gwen Moore,304
+Milwaukee,West Milwaukee,Village,"Wards 1, 2 & 5",2006,congress,4,Republican,Perfecto Rivera,184
+Milwaukee,West Milwaukee,Village,"Wards 1, 2 & 5",2006,congress,4,Scattering,Scattering,0
 Milwaukee,West Milwaukee,Village,"Wards 3, 4 & 6",2006,congress,4,Democratic,Gwen Moore,404
 Milwaukee,West Milwaukee,Village,"Wards 3, 4 & 6",2006,congress,4,Republican,Perfecto Rivera,252
 Milwaukee,West Milwaukee,Village,"Wards 3, 4 & 6",2006,congress,4,Scattering,Scattering,1
@@ -36980,6 +36992,11 @@ Milwaukee,West Allis,City,Ward 12,2006,congress,4,Scattering,Scattering,2
 Milwaukee,West Allis,City,Ward 35,2006,congress,4,Democratic,Gwen Moore,97
 Milwaukee,West Allis,City,Ward 35,2006,congress,4,Republican,Perfecto Rivera,74
 Milwaukee,West Allis,City,Ward 35,2006,congress,4,Scattering,Scattering,0
+Jefferson,Concord,Town,"Wards 1, 2 & 4",2006,congress,5,Democratic,Bryan Kennedy,239
+Jefferson,Concord,Town,"Wards 1, 2 & 4",2006,congress,5,Republican,"F James Sensenbrenner, Jr",514
+Jefferson,Concord,Town,"Wards 1, 2 & 4",2006,congress,5,Wisconsin Green,Bob Levis,14
+Jefferson,Concord,Town,"Wards 1, 2 & 4",2006,congress,5,Independent,Robert R Raymond,9
+Jefferson,Concord,Town,"Wards 1, 2 & 4",2006,congress,5,Scattering,Scattering,0
 Jefferson,Farmington,Town,Wards 1 & 2,2006,congress,5,Democratic,Bryan Kennedy,219
 Jefferson,Farmington,Town,Wards 1 & 2,2006,congress,5,Republican,"F James Sensenbrenner, Jr",413
 Jefferson,Farmington,Town,Wards 1 & 2,2006,congress,5,Wisconsin Green,Bob Levis,14
@@ -38855,6 +38872,8 @@ Waukesha,Waukesha,City,Ward 59,2006,congress,5,Republican,"F James Sensenbrenner
 Waukesha,Waukesha,City,Ward 59,2006,congress,5,Wisconsin Green,Bob Levis,0
 Waukesha,Waukesha,City,Ward 59,2006,congress,5,Independent,Robert R Raymond,0
 Waukesha,Waukesha,City,Ward 59,2006,congress,5,Scattering,Scattering,0
+Adams,Adams,Town,Wards 1 & 2,2006,congress,6,Republican,Tom Petri,277
+Adams,Adams,Town,Wards 1 & 2,2006,congress,6,Scattering,Scattering,0
 Adams,Big Flats,Town,Ward 1,2006,congress,6,Republican,Tom Petri,237
 Adams,Big Flats,Town,Ward 1,2006,congress,6,Scattering,Scattering,1
 Adams,Colburn,Town,Ward 1,2006,congress,6,Republican,Tom Petri,51
@@ -39673,6 +39692,10 @@ Winnebago,Oshkosh,City,Ward 37,2006,congress,6,Republican,Tom Petri,0
 Winnebago,Oshkosh,City,Ward 37,2006,congress,6,Scattering,Scattering,0
 Winnebago,Oshkosh,City,Ward 38,2006,congress,6,Republican,Tom Petri,0
 Winnebago,Oshkosh,City,Ward 38,2006,congress,6,Scattering,Scattering,0
+Ashland,Agenda,Town,Ward 1,2006,congress,7,Democratic,David R Obey,128
+Ashland,Agenda,Town,Ward 1,2006,congress,7,Republican,Nick Reig,62
+Ashland,Agenda,Town,Ward 1,2006,congress,7,Wisconsin Green,Mike Miles,0
+Ashland,Agenda,Town,Ward 1,2006,congress,7,Scattering,Scattering,0
 Ashland,Ashland,Town,Ward 1,2006,congress,7,Democratic,David R Obey,143
 Ashland,Ashland,Town,Ward 1,2006,congress,7,Republican,Nick Reig,50
 Ashland,Ashland,Town,Ward 1,2006,congress,7,Wisconsin Green,Mike Miles,9
@@ -42461,6 +42484,9 @@ Wood,Wisconsin Rapids,City,Wards 21 - 23,2006,congress,7,Democratic,David R Obey
 Wood,Wisconsin Rapids,City,Wards 21 - 23,2006,congress,7,Republican,Nick Reig,348
 Wood,Wisconsin Rapids,City,Wards 21 - 23,2006,congress,7,Wisconsin Green,Mike Miles,22
 Wood,Wisconsin Rapids,City,Wards 21 - 23,2006,congress,7,Scattering,Scattering,0
+Brown,Eaton,Town,Wards 1 & 2,2006,congress,8,Democratic,Steven L Kagen,325
+Brown,Eaton,Town,Wards 1 & 2,2006,congress,8,Republican,John Gard,310
+Brown,Eaton,Town,Wards 1 & 2,2006,congress,8,Scattering,Scattering,3
 Brown,Glenmore,Town,Wards 1 & 2,2006,congress,8,Democratic,Steven L Kagen,233
 Brown,Glenmore,Town,Wards 1 & 2,2006,congress,8,Republican,John Gard,266
 Brown,Glenmore,Town,Wards 1 & 2,2006,congress,8,Scattering,Scattering,3

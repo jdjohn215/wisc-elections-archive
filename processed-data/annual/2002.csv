@@ -31301,6 +31301,10 @@ Wood,Wisconsin Rapids,City,Wards 1 - 23,2002,governor,NA,Independent 2,Ty A Boll
 Wood,Wisconsin Rapids,City,Wards 1 - 23,2002,governor,NA,Independent 3,Mike Mangan,13
 Wood,Wisconsin Rapids,City,Wards 1 - 23,2002,governor,NA,Independent 4,Aneb Jab Rasta,3
 Wood,Wisconsin Rapids,City,Wards 1 - 23,2002,governor,NA,Scattering,Scattering,7
+Kenosha,Brighton,Town,Wards 1 - 3,2002,congress,1,Democratic,Jeffrey C Thomas,112
+Kenosha,Brighton,Town,Wards 1 - 3,2002,congress,1,Republican,Paul Ryan,410
+Kenosha,Brighton,Town,Wards 1 - 3,2002,congress,1,Libertarian,Goerge Meyers,9
+Kenosha,Brighton,Town,Wards 1 - 3,2002,congress,1,Scattering,Scattering,0
 Kenosha,Bristol,Town,Wards 1 - 4 & 8,2002,congress,1,Democratic,Jeffrey C Thomas,157
 Kenosha,Bristol,Town,Wards 1 - 4 & 8,2002,congress,1,Republican,Paul Ryan,651
 Kenosha,Bristol,Town,Wards 1 - 4 & 8,2002,congress,1,Libertarian,Goerge Meyers,18
@@ -32385,6 +32389,9 @@ Waukesha,New Berlin,City,Ward 16,2002,congress,1,Democratic,Jeffrey C Thomas,115
 Waukesha,New Berlin,City,Ward 16,2002,congress,1,Republican,Paul Ryan,324
 Waukesha,New Berlin,City,Ward 16,2002,congress,1,Libertarian,Goerge Meyers,7
 Waukesha,New Berlin,City,Ward 16,2002,congress,1,Scattering,Scattering,0
+Columbia,Arlington,Town,Wards 1 & 2,2002,congress,2,Democratic,Tammy Baldwin,176
+Columbia,Arlington,Town,Wards 1 & 2,2002,congress,2,Republican,Ron Greer,139
+Columbia,Arlington,Town,Wards 1 & 2,2002,congress,2,Scattering,Scattering,0
 Columbia,Caledonia,Town,Wards 1 & 2,2002,congress,2,Democratic,Tammy Baldwin,266
 Columbia,Caledonia,Town,Wards 1 & 2,2002,congress,2,Republican,Ron Greer,204
 Columbia,Caledonia,Town,Wards 1 & 2,2002,congress,2,Scattering,Scattering,0
@@ -33489,6 +33496,10 @@ Walworth,Whitewater,City,Wards 5 & 6,2002,congress,2,Scattering,Scattering,2
 Walworth,Whitewater,City,Wards 7 & 8,2002,congress,2,Democratic,Tammy Baldwin,244
 Walworth,Whitewater,City,Wards 7 & 8,2002,congress,2,Republican,Ron Greer,150
 Walworth,Whitewater,City,Wards 7 & 8,2002,congress,2,Scattering,Scattering,1
+Buffalo,Alma,Town,Ward 1,2002,congress,3,Democratic,Ron Kind,68
+Buffalo,Alma,Town,Ward 1,2002,congress,3,Republican,Bill Arndt,34
+Buffalo,Alma,Town,Ward 1,2002,congress,3,Libertarian,Jeff Zastrow,0
+Buffalo,Alma,Town,Ward 1,2002,congress,3,Scattering,Scattering,0
 Buffalo,Belvidere,Town,Ward 1,2002,congress,3,Democratic,Ron Kind,92
 Buffalo,Belvidere,Town,Ward 1,2002,congress,3,Republican,Bill Arndt,50
 Buffalo,Belvidere,Town,Ward 1,2002,congress,3,Libertarian,Jeff Zastrow,0
@@ -36009,6 +36020,9 @@ Vernon,Westby,City,Wards 1 - 5,2002,congress,3,Democratic,Ron Kind,483
 Vernon,Westby,City,Wards 1 - 5,2002,congress,3,Republican,Bill Arndt,127
 Vernon,Westby,City,Wards 1 - 5,2002,congress,3,Libertarian,Jeff Zastrow,15
 Vernon,Westby,City,Wards 1 - 5,2002,congress,3,Scattering,Scattering,0
+Milwaukee,West Milwaukee,Village,"Wards 1, 2 & 5",2002,congress,4,Democratic,Jerry Kleczka,292
+Milwaukee,West Milwaukee,Village,"Wards 1, 2 & 5",2002,congress,4,Wisconsin Green,Brian Verdin,56
+Milwaukee,West Milwaukee,Village,"Wards 1, 2 & 5",2002,congress,4,Scattering,Scattering,5
 Milwaukee,West Milwaukee,Village,"Wards 3, 4 & 6",2002,congress,4,Democratic,Jerry Kleczka,376
 Milwaukee,West Milwaukee,Village,"Wards 3, 4 & 6",2002,congress,4,Wisconsin Green,Brian Verdin,69
 Milwaukee,West Milwaukee,Village,"Wards 3, 4 & 6",2002,congress,4,Scattering,Scattering,1
@@ -37038,6 +37052,9 @@ Milwaukee,West Allis,City,Ward 12,2002,congress,4,Scattering,Scattering,6
 Milwaukee,West Allis,City,Ward 35,2002,congress,4,Democratic,Jerry Kleczka,128
 Milwaukee,West Allis,City,Ward 35,2002,congress,4,Wisconsin Green,Brian Verdin,18
 Milwaukee,West Allis,City,Ward 35,2002,congress,4,Scattering,Scattering,2
+Jefferson,Concord,Town,"Wards 1, 2 & 4",2002,congress,5,Republican,"F James Sensenbrenner, Jr",485
+Jefferson,Concord,Town,"Wards 1, 2 & 4",2002,congress,5,Independent,Robert Raymond,81
+Jefferson,Concord,Town,"Wards 1, 2 & 4",2002,congress,5,Scattering,Scattering,2
 Jefferson,Farmington,Town,Wards 1 & 2,2002,congress,5,Republican,"F James Sensenbrenner, Jr",470
 Jefferson,Farmington,Town,Wards 1 & 2,2002,congress,5,Independent,Robert Raymond,95
 Jefferson,Farmington,Town,Wards 1 & 2,2002,congress,5,Scattering,Scattering,1
@@ -38091,6 +38108,8 @@ Waukesha,Waukesha,City,Ward 48,2002,congress,5,Scattering,Scattering,0
 Waukesha,Waukesha,City,Ward 49,2002,congress,5,Republican,"F James Sensenbrenner, Jr",0
 Waukesha,Waukesha,City,Ward 49,2002,congress,5,Independent,Robert Raymond,0
 Waukesha,Waukesha,City,Ward 49,2002,congress,5,Scattering,Scattering,0
+Adams,Adams,Town,Wards 1 & 2,2002,congress,6,Republican,Tom Petri,302
+Adams,Adams,Town,Wards 1 & 2,2002,congress,6,Scattering,Scattering,2
 Adams,Big Flats,Town,Ward 1,2002,congress,6,Republican,Tom Petri,216
 Adams,Big Flats,Town,Ward 1,2002,congress,6,Scattering,Scattering,3
 Adams,Colburn,Town,Ward 1,2002,congress,6,Republican,Tom Petri,56
@@ -38885,6 +38904,9 @@ Winnebago,Oshkosh,City,Ward 35,2002,congress,6,Republican,Tom Petri,0
 Winnebago,Oshkosh,City,Ward 35,2002,congress,6,Scattering,Scattering,0
 Winnebago,Oshkosh,City,Ward 36,2002,congress,6,Republican,Tom Petri,0
 Winnebago,Oshkosh,City,Ward 36,2002,congress,6,Scattering,Scattering,0
+Ashland,Agenda,Town,Ward 1,2002,congress,7,Democratic,David R Obey,103
+Ashland,Agenda,Town,Ward 1,2002,congress,7,Republican,Joe Rothbauer,53
+Ashland,Agenda,Town,Ward 1,2002,congress,7,Scattering,Scattering,0
 Ashland,Ashland,Town,Ward 1,2002,congress,7,Democratic,David R Obey,135
 Ashland,Ashland,Town,Ward 1,2002,congress,7,Republican,Joe Rothbauer,38
 Ashland,Ashland,Town,Ward 1,2002,congress,7,Scattering,Scattering,0
@@ -40880,6 +40902,10 @@ Wood,Pittsville,City,Wards 1 - 3,2002,congress,7,Scattering,Scattering,0
 Wood,Wisconsin Rapids,City,Wards 1 - 23,2002,congress,7,Democratic,David R Obey,3907
 Wood,Wisconsin Rapids,City,Wards 1 - 23,2002,congress,7,Republican,Joe Rothbauer,2004
 Wood,Wisconsin Rapids,City,Wards 1 - 23,2002,congress,7,Scattering,Scattering,1
+Brown,Bellevue,Town,Wards 1 - 6,2002,congress,8,Democratic,Andrew M Becker,413
+Brown,Bellevue,Town,Wards 1 - 6,2002,congress,8,Republican,Mark Green,1293
+Brown,Bellevue,Town,Wards 1 - 6,2002,congress,8,Wisconsin Green,Dick Kaiser,43
+Brown,Bellevue,Town,Wards 1 - 6,2002,congress,8,Scattering,Scattering,2
 Brown,Bellevue,Town,Wards 7 - 10,2002,congress,8,Democratic,Andrew M Becker,437
 Brown,Bellevue,Town,Wards 7 - 10,2002,congress,8,Republican,Mark Green,1679
 Brown,Bellevue,Town,Wards 7 - 10,2002,congress,8,Wisconsin Green,Dick Kaiser,42

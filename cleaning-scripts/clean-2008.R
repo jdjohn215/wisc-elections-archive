@@ -47,7 +47,7 @@ pres.2008.clean <- pres.2008.orig %>%
       name == "sarah_palin_john_mc_cain_republican" ~ "Republican",
       name == "rosa_clemente_cynthia_mc_kinney_wisconsin_green" ~ "Wisconsin Green",
       name == "wayne_a_root_bob_barr_libertarian" ~ "Libertarian",
-      name == "stewart_a_alexander_brian_moore_independent" ~ "Independent 1",
+      name == "stewart_a_alexander_brian_moore_independent" ~ "Independent",
       name == "robert_moses_gloria_la_riva_independent" ~ "Independent 2",
       name == "matt_gonzalez_ralph_nader_independent" ~ "Independent 3",
       name == "darrell_l_castle_chuck_baldwin_independent" ~ "Independent 4",
@@ -82,7 +82,7 @@ dist.colnames <- con.2008.orig[sort(c(dist.start, dist.start+1)),] %>%
 
 read_cong_district <- function(district){
   df <- readxl::read_excel("original-data/2008-11-04_FallElection_USCongress_WardbyWard.xls",
-                           col_types = "text", skip = (dist.start[district] + 2),
+                           col_types = "text", skip = (dist.start[district] + 1),
                            col_names = FALSE)
   names(df) <- dist.colnames$colname[dist.colnames$id == district][1:ncol(df)]
   df %>%

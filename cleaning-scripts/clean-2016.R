@@ -200,9 +200,9 @@ con.2016.clean <- all.dist.orig %>%
       name == "rep_glenn_grothman" ~ "Republican",
       name == "dem_mary_hoeft" ~ "Democratic",
       name == "rep_sean_duffy" ~ "Republican",
-      name == "dem_jerry_kobishop_wr_in" ~ "Democratic",
+      name == "dem_jerry_kobishop_wr_in" ~ "Write-in",
       name == "rep_mike_gallagher" ~ "Republican",
-      name == "wgr_wendy_gribben_write_in" ~ "Write-in",
+      name == "wgr_wendy_gribben_write_in" ~ "Write-in 2",
       name == "na_scattering" ~ "Scattering")
   ) %>%
   separate(rep_unit, into = c("municipality_name", "reporting_unit_name"), sep = " (?=Ward)") %>%
@@ -225,7 +225,7 @@ con.2016.clean %>%
 # Combine
 all.2016 <- bind_rows(
   pres.2016.clean %>%
-    mutate(office = "governor") %>%
+    mutate(office = "president") %>%
     select(county = county, municipality = municipality_name, ctv = municipality_type,
            reporting_unit = reporting_unit_name, office, party, candidate, votes),
   sen.2016.clean %>%

@@ -112,7 +112,7 @@ dist.colnames <- con.2006.orig[sort(c(dist.start, dist.start+1)),] %>%
 
 read_cong_district <- function(district){
   df <- readxl::read_excel("original-data/2006-11-07_FallElection_USCongress_WardbyWard.xls",
-                     col_types = "text", skip = (dist.start[district] + 2),
+                     col_types = "text", skip = (dist.start[district] + 1),
                      col_names = FALSE)
   names(df) <- dist.colnames$colname[dist.colnames$id == district][1:ncol(df)]
   df %>%

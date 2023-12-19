@@ -51,7 +51,7 @@ gov.2014.clean <- gov.2014.orig %>%
       name == "dem_mary_burke_john_lehman" ~ "Democratic",
       name == "rep_scott_walker_rebecca_kleefisch" ~ "Republican",
       name == "ind_dennis_fehr_no_candidate" ~ "Independent",
-      name == "ind_robert_burke_joseph_m_brost" ~ "Independent",
+      name == "ind_robert_burke_joseph_m_brost" ~ "Independent 2",
       name == "ind_mary_jo_walters_write_in" ~ "Write-in",
       name == "rep_steve_r_evans_write_in" ~ "Write-in 2",
       name == "con_jumoka_a_johnson_write_in" ~ "Write-in 3",
@@ -62,7 +62,7 @@ gov.2014.clean <- gov.2014.orig %>%
     )
   ) %>%
   separate(rep_unit, into = c("municipality_name", "reporting_unit_name"),
-           sep = " (?=Ward)") %>%
+           sep = " (?=Ward|WARD|ward|\\bWD\\b|\\bWDS\\b)") %>%
   mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name),
          municipality_type = str_sub(municipality_name, 1, 1),
          municipality_name = word(municipality_name, 3, -1))
@@ -155,7 +155,8 @@ con.2014.clean <- all.dist.orig %>%
       name == "rep_reid_j_ribble" ~ "Republican",
       name == "na_scattering" ~ "Scattering")
   ) %>%
-  separate(rep_unit, into = c("municipality_name", "reporting_unit_name"), sep = " (?=Ward)") %>%
+  separate(rep_unit, into = c("municipality_name", "reporting_unit_name"),
+           sep = " (?=Ward|WARD|ward|\\bWD\\b|\\bWDS\\b)") %>%
   mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name),
          municipality_type = str_sub(municipality_name, 1, 1),
          municipality_name = word(municipality_name, 3, -1),

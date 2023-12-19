@@ -113,7 +113,7 @@ dist.colnames <- con.2000.orig[sort(c(dist.start, dist.start+1)),] %>%
 
 read_cong_district <- function(district){
   readxl::read_excel("original-data/2000-11-07_US_CONG_SORT.xls",
-                     col_types = "text", skip = (dist.start[district] + 2),
+                     col_types = "text", skip = (dist.start[district] + 1),
                      col_names = dist.colnames$colname[dist.colnames$id == district]) %>%
     filter(OFFICE_NAME == OFFICE_NAME[row_number() == 1]) %>%
     janitor::clean_names() %>%
