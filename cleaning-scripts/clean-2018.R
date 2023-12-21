@@ -6,15 +6,16 @@ library(tidyverse)
 
 ################################################################################
 # govident 2018
-gov.2018.orig <- readxl::read_excel("original-data/2018%20General%20Election%20Governor%20Contest%20Candidates%20with%20Districts.xlsx") %>%
+gov.2018.orig <- readxl::read_excel("original-data/2018%20General%20Election%20Governor%20Contest%20Candidates%20with%20Districts.xlsx") |>
   janitor::clean_names()
 
 glimpse(gov.2018.orig)
 
-gov.2018.clean <- gov.2018.orig %>%
-  select(-contains("district")) %>%
-  pivot_longer(cols = -c(county, muni, reporting_unit_name),
-               values_to = "votes") %>%
+gov.2018.clean <- gov.2018.orig |>
+  rename(wss_dist = senate_district, wsa_dist = assembly_district, con_dist = congressional_district) |>
+  pivot_longer(cols = -c(county, muni, reporting_unit_name,
+                         wss_dist, wsa_dist, con_dist),
+               values_to = "votes") |>
   mutate(
     candidate = case_when(
       name == "scott_walker_rebecca_kleefisch_rep" ~ "Scott Walker / Rebecca Kleefisch",
@@ -50,31 +51,32 @@ gov.2018.clean <- gov.2018.orig %>%
       name == "no_candidate_william_henry_davis_iii_write_in_dem" ~ "Write-in 8",
       name == "scattering" ~ "Scattering"
     )
-  ) %>%
-  mutate(municipality_type = str_sub(muni, 1, 1),
-         municipality_name = word(muni, 3, -1))
+  ) |>
+  separate(reporting_unit_name, into = c("municipality_name", "reporting_unit_name"), sep = " (?=Ward|WARD)") |>
+  mutate(municipality_type = str_sub(municipality_name, 1, 1),
+         municipality_name = word(municipality_name, 3, -1))
 
-gov.2018.clean %>%
-  group_by(county, municipality_name, municipality_type, reporting_unit_name, candidate) %>%
+gov.2018.clean |>
+  group_by(county, municipality_name, municipality_type, reporting_unit_name, candidate) |>
   filter(n() > 1)
 
-gov.2018.clean %>%
-  group_by(candidate, party) %>%
-  summarise(count = n()) %>%
-  arrange(count) %>%
+gov.2018.clean |>
+  group_by(candidate, party) |>
+  summarise(count = n()) |>
+  arrange(count) |>
   print(n = 28)
 
 ################################################################################
 # senate 2018
-sen.2018.orig <- readxl::read_excel("original-data/US%20Senator_WardByWard_withDistricts%202018%20General_0.xlsx") %>%
-  janitor::clean_names() %>%
-  janitor::remove_empty("cols") %>%
+sen.2018.orig <- readxl::read_excel("original-data/US%20Senator_WardByWard_withDistricts%202018%20General_0.xlsx") |>
+  janitor::clean_names() |>
+  janitor::remove_empty("cols") |>
   filter(reporting_unit_name != "County Totals:",
          !is.na(reporting_unit_name))
 
-sen.2018.clean <- sen.2018.orig %>%
-  select(-contains("district")) %>%
-  pivot_longer(cols = -c(1:3), values_to = "votes") %>%
+sen.2018.clean <- sen.2018.orig |>
+  select(-contains("district")) |>
+  pivot_longer(cols = -c(1:3), values_to = "votes") |>
   mutate(
     candidate = case_when(
       name == "leah_vukmir_rep" ~ "Leah Vukmir",
@@ -90,19 +92,19 @@ sen.2018.clean <- sen.2018.orig %>%
       name == "john_schiess_write_in_ind" ~ "Write-in 2",
       name == "scattering" ~ "Scattering"
     )
-  ) %>%
-  mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name),
-         municipality_type = str_sub(muni, 1, 1),
-         municipality_name = word(muni, 3, -1))
+  ) |>
+  separate(reporting_unit_name, into = c("municipality_name", "reporting_unit_name"), sep = " (?=Ward|WARD)") |>
+  mutate(municipality_type = str_sub(municipality_name, 1, 1),
+         municipality_name = word(municipality_name, 3, -1))
 
-sen.2018.clean %>%
-  group_by(county, municipality_name, municipality_type, reporting_unit_name, candidate) %>%
+sen.2018.clean |>
+  group_by(county, municipality_name, municipality_type, reporting_unit_name, candidate) |>
   filter(n() > 1)
 
-sen.2018.clean %>%
-  group_by(candidate, party) %>%
-  summarise(count = n()) %>%
-  arrange(count) %>%
+sen.2018.clean |>
+  group_by(candidate, party) |>
+  summarise(count = n()) |>
+  arrange(count) |>
   print(n = 28)
 
 ################################################################################
@@ -114,24 +116,24 @@ read_cong_dist <- function(sheet){
   districtno <- dist$...1[which(str_detect(dist$...1, "REPRESENTATIVE IN CONGRESS "))]
   colname.start <- which(str_detect(dist$...3, "Total Votes Cast"))
   dist.colnames <- tibble(x1 = as.character(dist[colname.start,]),
-                          x2 = as.character(dist[colname.start + 1,])) %>%
-    mutate(colname = paste(x1, x2, sep = "_")) %>%
+                          x2 = as.character(dist[colname.start + 1,])) |>
+    mutate(colname = paste(x1, x2, sep = "_")) |>
     pull(colname)
   readxl::read_excel("original-data/Ward%20by%20Ward%20Report-Gen%20Election-Congress_0.xlsx",
-                     sheet = sheet, skip = (colname.start + 1), col_names = dist.colnames) %>%
-    janitor::clean_names() %>%
-    janitor::remove_empty("cols") %>%
-    rename(county = 1, rep_unit = 2) %>%
-    mutate(county = zoo::na.locf(county)) %>%
+                     sheet = sheet, skip = (colname.start + 1), col_names = dist.colnames) |>
+    janitor::clean_names() |>
+    janitor::remove_empty("cols") |>
+    rename(county = 1, rep_unit = 2) |>
+    mutate(county = zoo::na.locf(county)) |>
     filter(!is.na(rep_unit), 
-           rep_unit != "County Totals:") %>%
-    pivot_longer(cols = -c(1:3), values_to = "votes") %>%
+           rep_unit != "County Totals:") |>
+    pivot_longer(cols = -c(1:3), values_to = "votes") |>
     mutate(district = districtno)
 }
 
 all.dist.orig <- map_df(2:9, read_cong_dist)
 
-con.2018.clean <- all.dist.orig %>%
+con.2018.clean <- all.dist.orig |>
   mutate(
     candidate = case_when(
       name == "dem_randy_bryce" ~ "Randy Bryce",
@@ -186,43 +188,52 @@ con.2018.clean <- all.dist.orig %>%
       name == "dem_beau_liegeois" ~ "Democratic",
       name == "rep_mike_gallagher" ~ "Republican",
       name == "na_scattering" ~ "Scattering")
-  ) %>%
-  separate(rep_unit, into = c("municipality_name", "reporting_unit_name"), sep = " (?=Ward)") %>%
+  ) |>
+  separate(rep_unit, into = c("municipality_name", "reporting_unit_name"), sep = " (?=Ward)") |>
   mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name),
          municipality_type = str_sub(municipality_name, 1, 1),
          municipality_name = word(municipality_name, 3, -1),
          district = word(district, -1))
 
-con.2018.clean %>%
-  group_by(county, municipality_name, municipality_type, reporting_unit_name, candidate, district) %>%
+con.2018.clean |>
+  group_by(county, municipality_name, municipality_type, reporting_unit_name, candidate, district) |>
   filter(n() > 1)
 
-con.2018.clean %>%
-  group_by(candidate, party, district) %>%
-  summarise(count = n()) %>%
-  arrange(count) %>%
+con.2018.clean |>
+  group_by(candidate, party, district) |>
+  summarise(count = n()) |>
+  arrange(count) |>
   print(n = 32)
 
 ################################################################################
 # Combine
 all.2018 <- bind_rows(
-  gov.2018.clean %>%
-    mutate(office = "governor") %>%
+  gov.2018.clean |>
+    mutate(office = "governor") |>
+    select(county = county, municipality = municipality_name, ctv = municipality_type,
+           reporting_unit = reporting_unit_name, office, party, candidate, votes,
+           wss_dist, wsa_dist, con_dist),
+  sen.2018.clean |>
+    mutate(office = "senate") |>
     select(county = county, municipality = municipality_name, ctv = municipality_type,
            reporting_unit = reporting_unit_name, office, party, candidate, votes),
-  sen.2018.clean %>%
-    mutate(office = "senate") %>%
-    select(county = county, municipality = municipality_name, ctv = municipality_type,
-           reporting_unit = reporting_unit_name, office, party, candidate, votes),
-  con.2018.clean %>%
-    mutate(office = "congress") %>%
+  con.2018.clean |>
+    mutate(office = "congress") |>
     select(county, municipality = municipality_name, ctv = municipality_type,
            district, reporting_unit = reporting_unit_name,
            office, party, candidate, votes)
-) %>%
+) |>
   mutate(year = 2018,
-         across(where(is.character), str_squish)) %>%
+         across(where(is.character), str_squish)) |>
   select(county, municipality, ctv, reporting_unit, year, office, district,
-         party, candidate, votes)
+         wss_dist, wsa_dist, con_dist, party, candidate, votes) |>
+  group_by(county, municipality, ctv, reporting_unit) |>
+  mutate(wsa_dist = first(wsa_dist[office == "governor"]),
+         wss_dist = first(wss_dist[office == "governor"]),
+         con_dist = first(con_dist[office == "governor"])) |>
+  ungroup() |>
+  mutate(wsa_dist = as.numeric(str_sub(wsa_dist, -2, -1)),
+         wss_dist = as.numeric(str_sub(wss_dist, -2, -1)),
+         con_dist = as.numeric(str_sub(con_dist, -2, -1)))
 
 write_csv(all.2018, "processed-data/annual/2018.csv")

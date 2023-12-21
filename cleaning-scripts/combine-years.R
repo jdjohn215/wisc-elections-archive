@@ -16,12 +16,12 @@ all.files <- map_df(list.files("processed-data/annual", full.names = T, pattern 
 
 ################################################################################
 # standardize fields
-clean.results <- all.files %>%
-  mutate(district = replace(district, office != "congress", 0)) |>
+clean.results <- all.files |>
+  mutate(across(where(is.character), str_to_upper),
+         district = replace(district, office != "CONGRESS", 0)) |>
   # formatting to clean up inconsistent name formats
   mutate(county = str_remove(str_to_upper(county), " COUNTY$"),
          county = replace(county, county == "LACROSSE", "LA CROSSE"),
-         municipality = str_to_upper(municipality),
          municipality = replace(municipality, municipality == "MERRIMAC MERRIMAC TOWN", "MERRIMAC"),
          municipality = str_remove_all(municipality, "[.]"),
          ctv = str_to_upper(str_sub(ctv, 1, 1)),
@@ -40,15 +40,16 @@ clean.results <- all.files %>%
          ))
 
 # confirm that fields uniquely identify rows
-multiples <- clean.results %>%
-  group_by(county, municipality, ctv, year, reporting_unit, office, district, party) %>%
-  summarise(count = n()) %>%
+multiples <- clean.results |>
+  group_by(county, municipality, ctv, year, reporting_unit, office, district, party) |>
+  summarise(count = n()) |>
   filter(count > 1)
 nrow(multiples) == 0
 
 ###############################################################################
 # compare each race's total votes, dem votes, and rep votes with the Leip Atlas
-leip.totals <- read_csv("processed-data/leip-wi-totals.csv")
+leip.totals <- read_csv("processed-data/leip-wi-totals.csv") |>
+  mutate(office = str_to_upper(office))
 
 compare.with.leip <- full_join(
   clean.results |>
@@ -56,12 +57,12 @@ compare.with.leip <- full_join(
     summarise(votes = sum(votes)) |>
     group_by(year, office, district) |>
     mutate(total_vote = sum(votes)) |>
-    pivot_wider(names_from = party, values_from = votes) %>%
-    select(year, office, district, total_vote, democratic = Democratic, republican = Republican) %>%
+    pivot_wider(names_from = party, values_from = votes) |>
+    select(year, office, district, total_vote, democratic = DEMOCRATIC, republican = REPUBLICAN) |>
     pivot_longer(cols = -c(year, office, district), values_to = "my_total"),
   leip.totals |>
     pivot_longer(cols = -c(year, office, district), values_to = "leip_total")
-) %>%
+) |>
   mutate(my_total = if_else(is.na(my_total), 0, my_total),
          match = my_total == leip_total,
          diff = my_total - leip_total)
@@ -101,13 +102,23 @@ clean.results.with.fips |> filter(is.na(mcd_fips))
 
 clean.results.with.fips.valid <- clean.results.with.fips |>
   filter(!is.na(mcd_fips)) |>
-  select(mcd_fips, county, municipality, ctv, reporting_unit, year, office,
-         district, party, candidate, votes) |>
+  mutate(county_fips = str_sub(mcd_fips, 1, 5)) %>%
+  select(mcd_fips, county_fips, county, municipality, ctv, reporting_unit, year, office,
+         district, con_dist, wss_dist, wsa_dist, party, candidate, votes) |>
   # add total column
   group_by(mcd_fips, county, municipality, ctv, reporting_unit, year, office,
            district) |>
-  mutate(total_votes = sum(votes))
+  mutate(total_votes = sum(votes)) |>
+  ungroup()
 
+# check that senate districts match assembly districts appropriately
+#   The two instances where they don't have 0 votes, so I won't worry about it
+clean.results.with.fips.valid |>
+  filter(!is.na(wss_dist)) |>
+  anti_join(tibble(wsa_dist = 1:99,
+                   wss_dist = rep(1:33, each = 3))) |>
+  group_by(county, municipality, ctv, reporting_unit, year, con_dist, wss_dist, wsa_dist) |>
+  summarise()
 
 ###############################################################################
 # Save results by reporting unit, minor civil division, and municipality
@@ -116,7 +127,7 @@ write_csv(clean.results.with.fips.valid, "processed-data/AllElections_ReportingU
 
 #   by minor civil division
 mcd.totals <- clean.results.with.fips.valid |>
-  group_by(mcd_fips, municipality, ctv, year, office, district, party, candidate) |>
+  group_by(county, county_fips, mcd_fips, municipality, ctv, year, office, district, party, candidate) |>
   summarise(votes = sum(votes)) |>
   group_by(mcd_fips, municipality, ctv, year, office, district) |>
   mutate(total_votes = sum(votes))
@@ -124,7 +135,7 @@ write_csv(mcd.totals, "processed-data/AllElections_MinorCivilDivisions.csv")
 
 # by municipality
 municipality.totals <- clean.results.with.fips.valid |>
-  mutate(muni_fips = str_sub(mcd_fips, -5, -1)) |>
+  mutate(muni_fips = paste0("55", str_sub(mcd_fips, -5, -1))) |>
   group_by(muni_fips, municipality, ctv, year, office, district, party, candidate) |>
   summarise(votes = sum(votes)) |>
   group_by(muni_fips, municipality, ctv, year, office, district) |>

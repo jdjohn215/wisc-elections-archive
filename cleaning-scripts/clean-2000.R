@@ -7,20 +7,22 @@ library(tidyverse)
 ################################################################################
 # PRESIDENT
 pres.2000.orig <- readxl::read_excel("original-data/2000-11-07_PRES_SORT.xls",
-                                     col_types = "text", n_max = 3597) %>%
-  janitor::remove_empty("cols") %>%
+                                     col_types = "text", n_max = 3597) |>
+  janitor::remove_empty("cols") |>
   janitor::clean_names()
 
-pres.2000.clean <- pres.2000.orig %>%
+pres.2000.clean <- pres.2000.orig |>
   select(county_name, municipality_name, municipality_type, reporting_unit_name,
+         wsa_dist = state_assembly_district, wss_dist = state_senate_district, con_dist = us_con_district,
          george_bush_dick_cheney_republican, al_gore_joe_lieberman_democratic,
          harry_browne_art_olivier_libertarian, h_phillips_j_c_frazier_constitution,
          ralph_nader_winona_la_duke_wisconsin_greens, m_moorehead_gloria_la_riva_independent,
          james_harris_m_trowe_independent, john_hagelin_nat_goldhaber_independent,
-         pat_buchanan_ezola_foster_independent, scattering) %>%
-  mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name)) %>%
-  pivot_longer(cols = -c(county_name, municipality_name, municipality_type, reporting_unit_name),
-               names_to = "name", values_to = "votes") %>%
+         pat_buchanan_ezola_foster_independent, scattering) |>
+  mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name)) |>
+  pivot_longer(cols = -c(county_name, municipality_name, municipality_type, reporting_unit_name,
+                         wsa_dist, wss_dist, con_dist),
+               names_to = "name", values_to = "votes") |>
   mutate(
     candidate = case_when(
       name == "george_bush_dick_cheney_republican" ~ "George Bush / Dick Cheney",
@@ -46,30 +48,30 @@ pres.2000.clean <- pres.2000.orig %>%
       name == "scattering" ~ "Scattering")
   )
 
-pres.2000.clean %>%
-  group_by(county_name, municipality_name, municipality_type, reporting_unit_name, candidate) %>%
+pres.2000.clean |>
+  group_by(county_name, municipality_name, municipality_type, reporting_unit_name, candidate) |>
   filter(n() > 1)
 
-pres.2000.clean %>%
-  group_by(candidate) %>%
+pres.2000.clean |>
+  group_by(candidate) |>
   summarise(count = n())
 
 ################################################################################
 # Senate
 sen.2000.orig <- readxl::read_excel("original-data/2000-11-07_US_SEN_SORT.xls",
-                                    col_types = "text") %>%
-  janitor::remove_empty("cols") %>%
-  janitor::clean_names() %>%
+                                    col_types = "text") |>
+  janitor::remove_empty("cols") |>
+  janitor::clean_names() |>
   filter(!is.na(office_type))
 
-sen.2000.clean <- sen.2000.orig %>%
+sen.2000.clean <- sen.2000.orig |>
   select(county_name, municipality_name, municipality_type, reporting_unit_name,
          john_gillespie_republican, herbert_h_kohl_democratic,
          tim_peterson_libertarian, robert_r_raymond_constitution,
-         eugene_a_hem_independent, scattering) %>%
-  mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name)) %>%
+         eugene_a_hem_independent, scattering) |>
+  mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name)) |>
   pivot_longer(cols = -c(county_name, municipality_name, municipality_type, reporting_unit_name),
-               names_to = "name", values_to = "votes") %>%
+               names_to = "name", values_to = "votes") |>
   mutate(
     candidate = case_when(
       name == "john_gillespie_republican" ~ "John Gillespie",
@@ -86,43 +88,43 @@ sen.2000.clean <- sen.2000.orig %>%
       name == "eugene_a_hem_independent" ~ "Independent",
       name == "scattering" ~ "Scattering")
   )
-sen.2000.clean %>%
-  group_by(county_name, municipality_name, municipality_type, reporting_unit_name, candidate) %>%
+sen.2000.clean |>
+  group_by(county_name, municipality_name, municipality_type, reporting_unit_name, candidate) |>
   filter(n() > 1)
 
-sen.2000.clean %>%
-  group_by(candidate) %>%
+sen.2000.clean |>
+  group_by(candidate) |>
   summarise(count = n())
 
 ################################################################################
 # Congress
 con.2000.orig <- readxl::read_excel("original-data/2000-11-07_US_CONG_SORT.xls",
-                                    col_types = "text", col_names = FALSE) %>%
+                                    col_types = "text", col_names = FALSE) |>
   janitor::clean_names()
 
 dist.start <- which(con.2000.orig$x6 == "US CONGRESS")
-dist.colnames <- con.2000.orig[sort(c(dist.start, dist.start+1)),] %>%
-  mutate(id = rep(1:9, each = 2)) %>%
-  group_by(id) %>%
-  mutate(rownum = row_number()) %>%
-  ungroup() %>%
-  pivot_longer(cols = -c(id, rownum)) %>%
-  pivot_wider(names_from = rownum, values_from = value) %>%
-  mutate(colname = paste(`1`, `2`, sep = "_")) %>%
+dist.colnames <- con.2000.orig[sort(c(dist.start, dist.start+1)),] |>
+  mutate(id = rep(1:9, each = 2)) |>
+  group_by(id) |>
+  mutate(rownum = row_number()) |>
+  ungroup() |>
+  pivot_longer(cols = -c(id, rownum)) |>
+  pivot_wider(names_from = rownum, values_from = value) |>
+  mutate(colname = paste(`1`, `2`, sep = "_")) |>
   select(id, name, colname)
 
 read_cong_district <- function(district){
   readxl::read_excel("original-data/2000-11-07_US_CONG_SORT.xls",
                      col_types = "text", skip = (dist.start[district] + 1),
-                     col_names = dist.colnames$colname[dist.colnames$id == district]) %>%
-    filter(OFFICE_NAME == OFFICE_NAME[row_number() == 1]) %>%
-    janitor::clean_names() %>%
-    janitor::remove_empty("cols") %>%
+                     col_names = dist.colnames$colname[dist.colnames$id == district]) |>
+    filter(OFFICE_NAME == OFFICE_NAME[row_number() == 1]) |>
+    janitor::clean_names() |>
+    janitor::remove_empty("cols") |>
     select(-c(election_date, election_type, election_subtype, office_type_keyword,
               office_name, state_senate_district, state_assembly_district, 
               court_of_appeals_district, county_number, hindi_number, order_number,
-              municipality_number)) %>%
-    mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name)) %>%
+              municipality_number)) |>
+    mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name)) |>
     pivot_longer(cols = -c(county_name, municipality_name, municipality_type,
                            reporting_unit_name, us_congress_district),
                  names_to = "name", values_to = "votes")
@@ -130,7 +132,7 @@ read_cong_district <- function(district){
 
 all.dists <- map_df(1:9, read_cong_district)
 
-con.2000.clean <- all.dists %>%
+con.2000.clean <- all.dists |>
   mutate(
     candidate = case_when(
       name == "jeffrey_c_thomas_democratic" ~ "Jeffrey C Thomas",
@@ -160,35 +162,42 @@ con.2000.clean <- all.dists %>%
       name == "scattering_na" ~ "Scattering")
   )
 
-con.2000.clean %>%
-  group_by(county_name, municipality_name, municipality_type, reporting_unit_name, candidate) %>%
+con.2000.clean |>
+  group_by(county_name, municipality_name, municipality_type, reporting_unit_name, candidate) |>
   filter(n() > 1)
 
-con.2000.clean %>%
-  group_by(candidate, party, us_congress_district) %>%
-  summarise(count = n()) %>%
-  arrange(count) %>%
+con.2000.clean |>
+  group_by(candidate, party, us_congress_district) |>
+  summarise(count = n()) |>
+  arrange(count) |>
   print(n = 28)
 
 ################################################################################
 # Combine
 all.2000 <- bind_rows(
-  pres.2000.clean %>%
-    mutate(office = "president") %>%
+  pres.2000.clean |>
+    mutate(office = "president") |>
+    select(county = county_name, municipality = municipality_name, ctv = municipality_type,
+           reporting_unit = reporting_unit_name, office, party, candidate, votes,
+           wsa_dist, wss_dist, con_dist),
+  sen.2000.clean |>
+    mutate(office = "senate") |>
     select(county = county_name, municipality = municipality_name, ctv = municipality_type,
            reporting_unit = reporting_unit_name, office, party, candidate, votes),
-  sen.2000.clean %>%
-    mutate(office = "senate") %>%
-    select(county = county_name, municipality = municipality_name, ctv = municipality_type,
-           reporting_unit = reporting_unit_name, office, party, candidate, votes),
-  con.2000.clean %>%
-    mutate(office = "congress") %>%
+  con.2000.clean |>
+    mutate(office = "congress") |>
     select(county = county_name, municipality = municipality_name, ctv = municipality_type,
            district = us_congress_district, reporting_unit = reporting_unit_name,
            office, party, candidate, votes)
-) %>%
-  mutate(year = 2000) %>%
+) |>
+  mutate(year = 2000) |>
   select(county, municipality, ctv, reporting_unit, year, office, district,
-         party, candidate, votes)
+         con_dist, wsa_dist, wss_dist, party, candidate, votes) |>
+  group_by(county, municipality, ctv, reporting_unit) |>
+  arrange(wsa_dist) |>
+  mutate(wsa_dist = first(wsa_dist[office == "president"]),
+         wss_dist = first(wss_dist[office == "president"]),
+         con_dist = first(con_dist[office == "president"])) |>
+  ungroup()
 
 write_csv(all.2000, "processed-data/annual/2000.csv")
