@@ -5,7 +5,7 @@ library(tidyverse)
 # this script cleans election files from 2022
 
 ################################################################################
-# govident 2022
+# governor 2022
 gov.2022.orig <- readxl::read_excel("original-data/2022 Governor by reporting unit with Congressional, State Senate, Assembly district.xlsx") |>
   janitor::clean_names()
 
@@ -195,6 +195,142 @@ con.2022.clean |>
   print(n = 32)
 
 ################################################################################
+# assembly 2022
+read_wsa_dist <- function(sheet){
+  thispath <- "original-data/Ward by Ward Report_Representative to the Assembly_2022.xlsx"
+  dist <- readxl::read_excel(thispath, sheet = sheet, col_names = F)
+  
+  districtno <- dist$...1[which(str_detect(dist$...1, "REPRESENTATIVE TO THE ASSEMBLY "))]
+  colname.start <- which(str_detect(dist$...3, "Total Votes Cast"))
+  dist.colnames <- tibble(x1 = as.character(dist[colname.start,]),
+                          x2 = as.character(dist[colname.start + 1,])) |>
+    mutate(colname = paste(x1, x2, sep = "_")) |>
+    pull(colname)
+  readxl::read_excel(thispath, sheet = sheet, skip = (colname.start + 1),
+                     col_names = dist.colnames) |>
+    janitor::remove_empty("cols") |>
+    rename(county = 1, rep_unit = 2) |>
+    mutate(county = zoo::na.locf(county)) |>
+    filter(!is.na(rep_unit), 
+           rep_unit != "County Totals:") |>
+    pivot_longer(cols = -c(1:3), values_to = "votes") |>
+    mutate(district = districtno) |>
+    separate(name, into = c("party","candidate"), sep = "_") |>
+    mutate(
+      party = case_when(
+        str_detect(candidate, "write-in") ~ "Write-in",
+        candidate == "SCATTERING" ~ "Scattering",
+        party == "DEM" ~ "Democratic",
+        party == "REP" ~ "Republican",
+        party == "LIB" ~ "Libertarian",
+        party == "IND" ~ "Independent",
+        party == "CON" ~ "Constitution",
+        TRUE ~ party),
+      candidate = str_replace(candidate, "SCATTERING", "Scattering"),
+      candidate = str_remove(candidate, "(write-in)"),
+      across(where(is.character), str_squish)) |>
+    janitor::clean_names()
+}
+
+all.wsa.dist.orig <- map_df(2:100, read_wsa_dist)
+
+uniquely.name.wsa.party <- all.wsa.dist.orig |>
+  group_by(district, candidate, party) |> 
+  summarise(votes = sum(total_votes_cast_na)) |> 
+  arrange(desc(votes)) |> 
+  group_by(district, party) |>
+  mutate(party = if_else(row_number() > 1, 
+                             paste(party, row_number()),
+                             party)) |>
+  ungroup() |>
+  select(district, candidate, party)
+
+all.wsa.dist.orig.2 <- all.wsa.dist.orig |>
+  select(-party) |>
+  inner_join(uniquely.name.wsa.party) |>
+  separate(rep_unit, into = c("municipality_name", "reporting_unit_name"), sep = " (?=Ward)") |>
+  mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name),
+         municipality_type = str_sub(municipality_name, 1, 1),
+         municipality_name = word(municipality_name, 3, -1),
+         district = word(district, -1),
+         candidate = str_remove(candidate, coll( "()")))
+
+# ensure all candidates have a unique party label
+all.wsa.dist.orig.2 |>
+  group_by(district, party) |>
+  summarise(candidate = n_distinct(candidate)) |>
+  filter(candidate > 1)
+unique(all.wsa.dist.orig.2$party)
+
+################################################################################
+# state senate 2022
+read_wss_dist <- function(sheet){
+  thispath <- "original-data/Ward by Ward Report_State Senator_2022.xlsx"
+  dist <- readxl::read_excel(thispath, sheet = sheet, col_names = F)
+  
+  districtno <- dist$...1[which(str_detect(dist$...1, "STATE SENATOR DISTRICT"))]
+  colname.start <- which(str_detect(dist$...3, "Total Votes Cast"))
+  dist.colnames <- tibble(x1 = as.character(dist[colname.start,]),
+                          x2 = as.character(dist[colname.start + 1,])) |>
+    mutate(colname = paste(x1, x2, sep = "_")) |>
+    pull(colname)
+  readxl::read_excel(thispath, sheet = sheet, skip = (colname.start + 1),
+                     col_names = dist.colnames) |>
+    janitor::remove_empty("cols") |>
+    rename(county = 1, rep_unit = 2) |>
+    mutate(county = zoo::na.locf(county)) |>
+    filter(!is.na(rep_unit), 
+           rep_unit != "County Totals:") |>
+    pivot_longer(cols = -c(1:3), values_to = "votes") |>
+    mutate(district = districtno) |>
+    separate(name, into = c("party","candidate"), sep = "_") |>
+    mutate(
+      party = case_when(
+        str_detect(candidate, "write-in") ~ "Write-in",
+        candidate == "SCATTERING" ~ "Scattering",
+        party == "DEM" ~ "Democratic",
+        party == "REP" ~ "Republican",
+        party == "LIB" ~ "Libertarian",
+        party == "IND" ~ "Independent",
+        party == "CON" ~ "Constitution",
+        TRUE ~ party),
+      candidate = str_replace(candidate, "SCATTERING", "Scattering"),
+      candidate = str_remove(candidate, "(write-in)"),
+      across(where(is.character), str_squish)) |>
+    janitor::clean_names()
+}
+
+all.wss.dist.orig <- map_df(2:18, read_wss_dist)
+
+uniquely.name.wss.party <- all.wss.dist.orig |>
+  group_by(district, candidate, party) |> 
+  summarise(votes = sum(total_votes_cast_na)) |> 
+  arrange(desc(votes)) |> 
+  group_by(district, party) |>
+  mutate(party = if_else(row_number() > 1, 
+                         paste(party, row_number()),
+                         party)) |>
+  ungroup() |>
+  select(district, candidate, party)
+
+all.wss.dist.orig.2 <- all.wss.dist.orig |>
+  select(-party) |>
+  inner_join(uniquely.name.wss.party) |>
+  separate(rep_unit, into = c("municipality_name", "reporting_unit_name"), sep = " (?=Ward)") |>
+  mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name),
+         municipality_type = str_sub(municipality_name, 1, 1),
+         municipality_name = word(municipality_name, 3, -1),
+         district = word(district, -1),
+         candidate = str_remove(candidate, coll( "()")))
+
+# ensure all candidates have a unique party label
+all.wss.dist.orig.2 |>
+  group_by(district, party) |>
+  summarise(candidate = n_distinct(candidate)) |>
+  filter(candidate > 1)
+unique(all.wss.dist.orig.2$party)
+
+################################################################################
 # Combine
 all.2022 <- bind_rows(
   gov.2022.clean |>
@@ -208,6 +344,16 @@ all.2022 <- bind_rows(
            reporting_unit = reporting_unit_name, office, party, candidate, votes),
   con.2022.clean |>
     mutate(office = "congress") |>
+    select(county, municipality = municipality_name, ctv = municipality_type,
+           district, reporting_unit = reporting_unit_name,
+           office, party, candidate, votes),
+  all.wsa.dist.orig.2 |>
+    mutate(office = "state assembly") |>
+    select(county, municipality = municipality_name, ctv = municipality_type,
+           district, reporting_unit = reporting_unit_name,
+           office, party, candidate, votes),
+  all.wss.dist.orig.2 |>
+    mutate(office = "state senate") |>
     select(county, municipality = municipality_name, ctv = municipality_type,
            district, reporting_unit = reporting_unit_name,
            office, party, candidate, votes)

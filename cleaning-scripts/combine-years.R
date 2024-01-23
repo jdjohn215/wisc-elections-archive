@@ -18,7 +18,7 @@ all.files <- map_df(list.files("processed-data/annual", full.names = T, pattern 
 # standardize fields
 clean.results <- all.files |>
   mutate(across(where(is.character), str_to_upper),
-         district = replace(district, office != "CONGRESS", 0)) |>
+         district = replace(district, ! office %in% c("CONGRESS", "STATE ASSEMBLY", "STATE SENATE"), 0)) |>
   # formatting to clean up inconsistent name formats
   mutate(county = str_remove(str_to_upper(county), " COUNTY$"),
          county = replace(county, county == "LACROSSE", "LA CROSSE"),
@@ -53,6 +53,7 @@ leip.totals <- read_csv("processed-data/leip-wi-totals.csv") |>
 
 compare.with.leip <- full_join(
   clean.results |>
+    filter(! office %in% c("STATE ASSEMBLY", "STATE SENATE")) |>
     group_by(year, office, district, party) |>
     summarise(votes = sum(votes)) |>
     group_by(year, office, district) |>
@@ -74,6 +75,12 @@ mismatch |> group_by(year, office, district) |> summarise(count = n())
 #   classified a write-in "Republican" as the Republican candidate. In our data
 #   we leave these candidates as true write-ins, so there is no real difference here.
 
+###############################################################################
+# verify that state assembly and senate totals are sensible
+by.state.legis <- clean.results |>
+  filter(str_detect(office, "STATE")) |>
+  group_by(office, year, district) |>
+  summarise(total_votes = sum(votes))
 ###############################################################################
 # Add minor civil division FIPS code
 mcd.codes <- sf::st_read("processed-data/mcd-boundaries-2000_2009-2022.geojson") |>

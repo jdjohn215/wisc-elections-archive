@@ -213,43 +213,194 @@ con.2010.clean <- all.dist.orig |>
          municipality_name = word(municipality_name, 3, -1),
          district = word(district, -1))
 
+con.2010.clean |>
+  group_by(county, municipality_name, municipality_type, reporting_unit_name, candidate) |>
+  filter(n() > 1)
+
+con.2010.clean |>
+  group_by(candidate, party, district) |>
+  summarise(count = n()) |>
+  arrange(count) |>
+  print(n = 29)
+
+################################################################################
+# state assembly 2010
+read_wsa_dist <- function(sheet){
+  dist <- readxl::read_excel("original-data/2010-11-02_Fall_General_All_Races_Ward_by_Ward.xls",
+                             sheet = sheet, col_names = F)
+  
+  districtno <- dist$...1[8]
+  dist.colnames <- tibble(x1 = as.character(dist[10,]),
+                          x2 = as.character(dist[11,])) |>
+    mutate(colname = paste(x1, x2, sep = "_")) |>
+    pull(colname)
+  readxl::read_excel("original-data/2010-11-02_Fall_General_All_Races_Ward_by_Ward.xls",
+                     sheet = sheet, skip = 11, col_names = dist.colnames) |>
+    janitor::remove_empty("cols") |>
+    rename(county = 1, rep_unit = 2) |>
+    mutate(county = zoo::na.locf(county)) |>
+    filter(!is.na(rep_unit), 
+           rep_unit != "County Totals:") |>
+    pivot_longer(cols = -c(1:3), values_to = "votes") |>
+    mutate(district = districtno) |>
+    separate(name, into = c("party","candidate"), sep = "_") |>
+    mutate(
+      party = case_when(
+        str_detect(candidate, "write-in|wr-in|WRITE-IN") ~ "Write-in",
+        candidate == "SCATTERING" ~ "Scattering",
+        party == "DEM" ~ "Democratic",
+        party == "REP" ~ "Republican",
+        party == "LIB" ~ "Libertarian",
+        party == "IND" ~ "Independent",
+        party == "CON" ~ "Constitution",
+        party == "WIG" ~ "Wisconsin Green",
+        party == "NA" ~ "Independent",
+        TRUE ~ party),
+      candidate = str_replace(candidate, "SCATTERING", "Scattering"),
+      candidate = str_remove(candidate, "(write-in)|(wr-in)|(WRITE-IN)"),
+      across(where(is.character), str_squish)) |>
+    janitor::clean_names()
+}
+
+all.wsa.orig <- map_df(32:130, read_wsa_dist)
+
+uniquely.name.wsa.party <- all.wsa.orig |>
+  group_by(district, candidate, party) |> 
+  summarise(votes = sum(total_votes_cast_na)) |> 
+  arrange(desc(votes)) |> 
+  group_by(district, party) |>
+  mutate(party = if_else(row_number() > 1, 
+                         paste(party, row_number()),
+                         party)) |>
+  ungroup() |>
+  select(district, candidate, party)
+
+all.wsa.dist.orig.2 <- all.wsa.orig |>
+  select(-party) |>
+  inner_join(uniquely.name.wsa.party) |>
+  mutate(rep_unit = str_replace(rep_unit, "WARD WD", "WARD")) |>
+  separate(rep_unit, into = c("municipality_name", "reporting_unit_name"),
+           sep = " (?=Ward|WARD|ward|\\bWD\\b|\\bWDS\\b)") |>
+  mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name),
+         municipality_type = str_sub(municipality_name, 1, 1),
+         municipality_name = word(municipality_name, 3, -1),
+         district = word(district, -1),
+         candidate = str_remove(candidate, coll(" ()")))
+
+# ensure all candidates have a unique party label
+all.wsa.dist.orig.2 |>
+  group_by(district, party) |>
+  summarise(candidate = n_distinct(candidate)) |>
+  filter(candidate > 1)
+unique(all.wsa.dist.orig.2$party)
+
+################################################################################
+# state senate 2010
+read_wss_dist <- function(sheet){
+  dist <- readxl::read_excel("original-data/2010-11-02_Fall_General_All_Races_Ward_by_Ward.xls",
+                             sheet = sheet, col_names = F)
+  
+  districtno <- dist$...1[8]
+  dist.colnames <- tibble(x1 = as.character(dist[10,]),
+                          x2 = as.character(dist[11,])) |>
+    mutate(colname = paste(x1, x2, sep = "_")) |>
+    pull(colname)
+  readxl::read_excel("original-data/2010-11-02_Fall_General_All_Races_Ward_by_Ward.xls",
+                     sheet = sheet, skip = 11, col_names = dist.colnames) |>
+    janitor::remove_empty("cols") |>
+    rename(county = 1, rep_unit = 2) |>
+    mutate(county = zoo::na.locf(county)) |>
+    filter(!is.na(rep_unit), 
+           rep_unit != "County Totals:") |>
+    pivot_longer(cols = -c(1:3), values_to = "votes") |>
+    mutate(district = districtno) |>
+    separate(name, into = c("party","candidate"), sep = "_") |>
+    mutate(
+      party = case_when(
+        str_detect(candidate, "write-in|wr-in|WRITE-IN") ~ "Write-in",
+        candidate == "SCATTERING" ~ "Scattering",
+        party == "DEM" ~ "Democratic",
+        party == "REP" ~ "Republican",
+        party == "LIB" ~ "Libertarian",
+        party == "IND" ~ "Independent",
+        party == "CON" ~ "Constitution",
+        party == "WIG" ~ "Wisconsin Green",
+        party == "NA" ~ "Independent",
+        TRUE ~ party),
+      candidate = str_replace(candidate, "SCATTERING", "Scattering"),
+      candidate = str_remove(candidate, "(write-in)|(wr-in)|(WRITE-IN)"),
+      across(where(is.character), str_squish)) |>
+    janitor::clean_names()
+}
+
+all.wss.orig <- map_df(15:31, read_wss_dist)
+
+uniquely.name.wss.party <- all.wss.orig |>
+  group_by(district, candidate, party) |> 
+  summarise(votes = sum(total_votes_cast_na)) |> 
+  arrange(desc(votes)) |> 
+  group_by(district, party) |>
+  mutate(party = if_else(row_number() > 1, 
+                         paste(party, row_number()),
+                         party)) |>
+  ungroup() |>
+  select(district, candidate, party)
+
+all.wss.dist.orig.2 <- all.wss.orig |>
+  select(-party) |>
+  inner_join(uniquely.name.wss.party) |>
+  mutate(rep_unit = str_replace(rep_unit, "WARD WD", "WARD")) |>
+  separate(rep_unit, into = c("municipality_name", "reporting_unit_name"),
+           sep = " (?=Ward|WARD|ward|\\bWD\\b|\\bWDS\\b)") |>
+  mutate(reporting_unit_name = if_else(is.na(reporting_unit_name), "Ward 1", reporting_unit_name),
+         municipality_type = str_sub(municipality_name, 1, 1),
+         municipality_name = word(municipality_name, 3, -1),
+         district = word(district, -1),
+         candidate = str_remove(candidate, coll(" ()")))
+
+# ensure all candidates have a unique party label
+all.wss.dist.orig.2 |>
+  group_by(district, party) |>
+  summarise(candidate = n_distinct(candidate)) |>
+  filter(candidate > 1)
+unique(all.wss.dist.orig.2$party)
+
+################################################################################
+# Combine
+all.2010 <- bind_rows(
+  gov.2010.clean |>
+    mutate(office = "governor") |>
+    select(county = county, municipality = municipality_name, ctv = municipality_type,
+           con_dist, wss_dist, wsa_dist,
+           reporting_unit = reporting_unit_name, office, party, candidate, votes),
   con.2010.clean |>
-    group_by(county, municipality_name, municipality_type, reporting_unit_name, candidate) |>
-    filter(n() > 1)
-  
-  con.2010.clean |>
-    group_by(candidate, party, district) |>
-    summarise(count = n()) |>
-    arrange(count) |>
-    print(n = 29)
-  
-  ################################################################################
-  # Combine
-  all.2010 <- bind_rows(
-    gov.2010.clean |>
-      mutate(office = "governor") |>
-      select(county = county, municipality = municipality_name, ctv = municipality_type,
-             con_dist, wss_dist, wsa_dist,
-             reporting_unit = reporting_unit_name, office, party, candidate, votes),
-    con.2010.clean |>
-      mutate(office = "congress") |>
-      select(county, municipality = municipality_name, ctv = municipality_type,
-             district, reporting_unit = reporting_unit_name,
-             office, party, candidate, votes),
-    sen.2010.clean |>
-      mutate(office = "senate") |>
-      select(county = county, municipality = municipality_name, ctv = municipality_type,
-             reporting_unit = reporting_unit_name, office, party, candidate, votes)
-  ) |>
-    mutate(year = 2010,
-           across(where(is.character), str_squish)) |>
-    select(county, municipality, ctv, reporting_unit, year, office, district,
-           con_dist, wss_dist, wsa_dist, party, candidate, votes) |>
-    group_by(county, municipality, ctv, reporting_unit) |>
-    mutate(con_dist = unique(con_dist[office == "governor"]),
-           wss_dist = unique(wss_dist[office == "governor"]),
-           wsa_dist = unique(wsa_dist[office == "governor"])) |>
-    ungroup()
-  
+    mutate(office = "congress") |>
+    select(county, municipality = municipality_name, ctv = municipality_type,
+           district, reporting_unit = reporting_unit_name,
+           office, party, candidate, votes),
+  sen.2010.clean |>
+    mutate(office = "senate") |>
+    select(county = county, municipality = municipality_name, ctv = municipality_type,
+           reporting_unit = reporting_unit_name, office, party, candidate, votes),
+  all.wss.dist.orig.2 |>
+    mutate(office = "state senate") |>
+    select(county, municipality = municipality_name, ctv = municipality_type,
+           district, reporting_unit = reporting_unit_name,
+           office, party, candidate, votes),
+  all.wsa.dist.orig.2 |>
+    mutate(office = "state assembly") |>
+    select(county, municipality = municipality_name, ctv = municipality_type,
+           district, reporting_unit = reporting_unit_name,
+           office, party, candidate, votes)
+) |>
+  mutate(year = 2010,
+         across(where(is.character), str_squish)) |>
+  select(county, municipality, ctv, reporting_unit, year, office, district,
+         con_dist, wss_dist, wsa_dist, party, candidate, votes) |>
+  group_by(county, municipality, ctv, reporting_unit) |>
+  mutate(con_dist = unique(con_dist[office == "governor"]),
+         wss_dist = unique(wss_dist[office == "governor"]),
+         wsa_dist = unique(wsa_dist[office == "governor"])) |>
+  ungroup()
+
 write_csv(all.2010, "processed-data/annual/2010.csv")
-  
