@@ -277,7 +277,12 @@ uniquely.name.wsa.party <- all.wsa.dist.orig |>
                          paste(party, row_number()),
                          party)) |>
   ungroup() |>
-  select(district, candidate, party)
+  select(district, candidate, party) |>
+  # munge
+  mutate(party = case_when(
+    candidate == "STEPHEN J. DOERR" & district == "ASSEMBLY - DISTRICT 92" ~ "Write-in",
+    TRUE ~ party
+  ))
 
 all.wsa.dist.orig.2 <- all.wsa.dist.orig |>
   select(-party) |>
