@@ -116,7 +116,8 @@ clean.results.with.fips.valid <- clean.results.with.fips |>
   group_by(mcd_fips, county, municipality, ctv, reporting_unit, year, office,
            district) |>
   mutate(total_votes = sum(votes)) |>
-  ungroup()
+  ungroup() |>
+  mutate(office = if_else(office == "SENATE", "US SENATE", office))
 
 # check that senate districts match assembly districts appropriately
 #   The two instances where they don't have 0 votes, so I won't worry about it
