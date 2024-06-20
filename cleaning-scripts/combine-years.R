@@ -143,10 +143,16 @@ write_csv(mcd.totals, "processed-data/AllElections_MinorCivilDivisions.csv")
 
 # by municipality
 municipality.totals <- clean.results.with.fips.valid |>
-  mutate(muni_fips = paste0("55", str_sub(mcd_fips, -5, -1))) |>
-  group_by(muni_fips, municipality, ctv, year, office, district, party, candidate) |>
+  mutate(
+    muni_label = case_when(
+      ctv == "T" ~ paste(ctv, municipality, paste0("(", county, ")")),
+      TRUE ~ paste(ctv, municipality)
+    ),
+    muni_fips = paste0("55", str_sub(mcd_fips, -5, -1))) |>
+  group_by(muni_fips, municipality, ctv, muni_label, year, office, district, party, candidate) |>
   summarise(votes = sum(votes)) |>
-  group_by(muni_fips, municipality, ctv, year, office, district) |>
-  mutate(total_votes = sum(votes))
+  group_by(muni_fips, municipality, ctv, muni_label, year, office, district) |>
+  mutate(total_votes = sum(votes)) |>
+  ungroup()
 write_csv(municipality.totals, "processed-data/AllElections_Municipalities.csv")
 
