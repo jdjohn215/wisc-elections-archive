@@ -3,9 +3,11 @@ rm(list = ls())
 library(tidyverse)
 library(sf)
 
+wi.cb <- tigris::states(cb = T) |> filter(GEOID == "55") |> select(STATEFP)
+
 ############################################################################
 # 2000 and 2009 are downloaded from IPUMS NHGIS
-mcd.2000 <- st_read("~/Downloads/nhgis0276_shape/nhgis0276_shapefile_tl2010_us_cty_sub_2000/US_cty_sub_2000_tl10.shp") |>
+mcd.2000 <- st_read("/Users/johnsonjoh/Downloads/nhgis0310_shape/nhgis0310_shapefile_tl2010_us_cty_sub_2000/US_cty_sub_2000_tl10.shp") |>
   filter(STATEFP00 == "55") |>
   mutate(LSAD = word(NAMELSAD00, -1)) |>
   select(municipality_name = NAME00, ctv = LSAD, state_fips = STATEFP00,
@@ -14,7 +16,7 @@ mcd.2000 <- st_read("~/Downloads/nhgis0276_shape/nhgis0276_shapefile_tl2010_us_c
   rmapshaper::ms_simplify(keep_shapes = T) %>%
   st_transform(crs = 4269)
 
-mcd.2009 <- st_read("~/Downloads/nhgis0276_shape/nhgis0276_shapefile_tl2009_us_cty_sub_2009/US_cty_sub_2009.shp") |>
+mcd.2009 <- st_read("/Users/johnsonjoh/Downloads/nhgis0310_shape/nhgis0310_shapefile_tl2009_us_cty_sub_2009/US_cty_sub_2009.shp") |>
   filter(STATEFP == "55") |>
   mutate(LSAD = word(NAMELSAD, -1)) |>
   select(municipality_name = NAME, ctv = LSAD, state_fips = STATEFP,
@@ -34,12 +36,16 @@ mcd.2011 <- tigris::county_subdivisions("WI", year = 2011) |> # cb = TRUE not av
   select(municipality_name = NAME, ctv = LSAD, state_fips = STATEFP, 
          county_fips = COUNTYFP, cousub_fips = COUSUBFP) |>
   mutate(year = 2011) %>%
+  st_intersection(wi.cb) |> # remove water areas
+  st_collection_extract("POLYGON") |>
   rmapshaper::ms_simplify(keep_shapes = T)
 mcd.2012 <- tigris::county_subdivisions("WI", year = 2012) |>
   mutate(LSAD = word(NAMELSAD, -1)) |>
   select(municipality_name = NAME, ctv = LSAD, state_fips = STATEFP, 
          county_fips = COUNTYFP, cousub_fips = COUSUBFP) |>
   mutate(year = 2012) %>%
+  st_intersection(wi.cb) |> # remove water areas
+  st_collection_extract("POLYGON") |>
   rmapshaper::ms_simplify(keep_shapes = T)
 mcd.2013 <- tigris::county_subdivisions("WI", year = 2013, cb = T) |>
   mutate(LSAD = case_when(
