@@ -129,7 +129,7 @@ clean.results.with.fips.valid |>
   summarise()
 
 ###############################################################################
-# Save results by reporting unit, minor civil division, and municipality
+# Save results by reporting unit, minor civil division, municipality, and county
 #   by reporting unit
 write_csv(clean.results.with.fips.valid, "processed-data/AllElections_ReportingUnit.csv")
 
@@ -155,4 +155,13 @@ municipality.totals <- clean.results.with.fips.valid |>
   mutate(total_votes = sum(votes)) |>
   ungroup()
 write_csv(municipality.totals, "processed-data/AllElections_Municipalities.csv")
+
+# by county
+county.totals <- clean.results.with.fips.valid |>
+  group_by(county_fips, county, year, office, district, party, candidate) |>
+  summarise(votes = sum(votes)) |>
+  group_by(county_fips, county, year, office, district) |>
+  mutate(total_votes = sum(votes)) |>
+  ungroup()
+write_csv(county.totals, "processed-data/AllElections_Counties.csv")
 
