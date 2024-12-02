@@ -83,7 +83,7 @@ by.state.legis <- clean.results |>
   summarise(total_votes = sum(votes))
 ###############################################################################
 # Add minor civil division FIPS code
-mcd.codes <- sf::st_read("processed-data/mcd-boundaries-2000_2009-2022.geojson") |>
+mcd.codes <- sf::st_read("processed-data/mcd-boundaries-2000_2009-2024.geojson") |>
   sf::st_drop_geometry() |>
   tibble() |>
   group_by(mcd_fips, county, municipality, ctv) |>
