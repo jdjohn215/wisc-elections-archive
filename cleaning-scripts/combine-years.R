@@ -164,4 +164,5 @@ county.totals <- clean.results.with.fips.valid |>
   mutate(total_votes = sum(votes)) |>
   ungroup()
 write_csv(county.totals, "processed-data/AllElections_Counties.csv")
+write_csv(county.totals, "processed-data/AllElections_Counties.csv.gz")
 
