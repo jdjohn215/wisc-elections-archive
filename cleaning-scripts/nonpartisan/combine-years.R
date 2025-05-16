@@ -67,7 +67,7 @@ mismatch |> group_by(year, office) |> summarise(count = n())
 
 ###############################################################################
 # Add minor civil division FIPS code
-mcd.codes <- sf::st_read("processed-data/mcd-boundaries-2000_2009-2024.geojson") |>
+mcd.codes <- sf::st_read("processed-data/mcd-boundaries-2000_2009-2025.geojson") |>
   sf::st_drop_geometry() |>
   tibble() |>
   group_by(mcd_fips, county, municipality, ctv) |>
