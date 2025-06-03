@@ -100,6 +100,7 @@ clean.results.with.fips.valid <- clean.results.with.fips |>
 # Save results by reporting unit, minor civil division, municipality, and county
 #   by reporting unit
 write_csv(clean.results.with.fips.valid, "processed-data/nonpartisan/AllElections_ReportingUnit.csv")
+write_csv(clean.results.with.fips.valid, "processed-data/nonpartisan/AllElections_ReportingUnit.csv.gz")
 
 #   by minor civil division
 mcd.totals <- clean.results.with.fips.valid |>
