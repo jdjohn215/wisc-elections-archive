@@ -1,0 +1,59 @@
+---
+title: "README"
+format: gfm
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(warning = F, message = F, echo = F)
+all.results <- read_csv("processed-data/AllResults_ReportingUnit.csv.gz")
+```
+
+This repository includes Wisconsin election results from four different kinds of elections: February nonpartisan primaries, April nonpartisan general elections & presidential preference votes, August partisan primaries, and November partisan general elections.
+
+Original, official election results at the voting tabulation district level are included in the `original-data/` directory. Scripts processing these files into a standardized format are in `cleaning-scripts/`. The script `cleaning-scripts/combine-all.R` combines all of these files into a single, master dataset. You can access this dataset as a single zipped CSV file (`processed-data/AllResults_ReportingUnit.csv.gz`) or as a Hive-partitioned parquet dataset in `processed-data/parquet/`. The data looks like this:
+
+```{r}
+all.results |> filter(year == 2026, month == "AUGUST") |> arrange(mcd_fips, reporting_unit, office, party, candidate) |> glimpse()
+```
+
+## Data dictionary
+
+Each row is one candidate's vote total in one contest in one reporting unit (a ward or group of wards). The same data is also available as a Hive-partitioned parquet dataset in `processed-data/parquet/` (partitioned by `year` / `month` / `office`).
+
+### Coverage
+
+Coverage is complete back to 2000 for some offices, while results for other offices have yet to be added. Note shown in this table, but nonetheless included in the data, is the June 2012 gubernatorial recall election.
+
+```{r}
+all.results |>
+  group_by(year, month, office, district) |>
+  summarise(votes = sum(votes), .groups = "drop") |>
+  distinct(year, month, office) |>
+  pivot_wider(names_from = month, values_from = office,
+              values_fn = ~paste(.x, collapse = ", ")) |>
+  select(year, FEBRUARY, APRIL, AUGUST, NOVEMBER) |>
+  knitr::kable()
+```
+
+### Columns
+
+| column | type | description |
+|------------------------|------------------------|------------------------|
+| mcd_fips | character | 10-digit Census FIPS code for the minor civil division (55 + 3-digit county + 5-digit MCD) |
+| county_fips | character | 5-digit state + county FIPS (first 5 characters of `mcd_fips`). |
+| county | character | County name, uppercase, standardized (e.g. `LA CROSSE`). |
+| municipality | character | Municipality (MCD) name, uppercase and standardized, without the CITY/TOWN/VILLAGE prefix (e.g. `ADAMS`, `FONTANA-ON-GENEVA LAKE`). |
+| ctv | character | Municipality type: `C` = city, `T` = town, `V` = village. |
+| reporting_unit | character | Ward group within the municipality, e.g. `WARD 1`, `WARDS 1-3`. Filled with `WARD 1` when the source named no wards. The boundaries of wards with same name can change between years. |
+| year | double | Election year, 2000–2026. |
+| month | character | `FEBRUARY`, `APRIL`, `AUGUST`, or `NOVEMBER`; identifies the election type (see coverage table). |
+| office | character | Contest name. Partisan district offices are collapsed to `CONGRESS`, `STATE SENATE`, `STATE ASSEMBLY` with the number in `district`; the one exception is `REPRESENTATIVE IN CONGRESS DISTRICT 8 (SPECIAL)` (August 2024). |
+| party | character | Ballot party of the contest. In November generals, `SCATTERING` and `WRITE-IN` (plus `WRITE-IN 2` … `WRITE-IN 9`, `INDEPENDENT 2` … `INDEPENDENT 5`) appear as party values; numbered variants distinguish multiple write-in/independent candidates in one contest. |
+| candidate | character | Candidate name, uppercase. Presidential tickets include both names (`KAMALA D. HARRIS TIM WALZ`). Write-in candidates may carry a `(WRITE-IN)` suffix. `SCATTERING` is a pseudo-candidate for write-in scattering votes. Source spelling is preserved including year-to-year variation for the same person. |
+| votes | double | Votes received by the candidate in this reporting unit. |
+| total_votes | double | Sum of all candidate votes (including SCATTERING) for this contest in this reporting unit. |
+| district | double | District number for CONGRESS, STATE SENATE, and STATE ASSEMBLY contests; `0` for statewide and other offices (including the CD-8 special); NA for all February/April rows. Districts are those in effect for that election. |
+| con_dist | double | Congressional district containing the reporting unit in that year. Only populated for August/November rows. |
+| wss_dist | double | State senate district containing the reporting unit in that year. Populated for August/November rows. |
+| wsa_dist | double | State assembly district containing the reporting unit in that year. Same coverage as `wss_dist`. |

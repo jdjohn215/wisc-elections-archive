@@ -4,3 +4,5 @@
 .Ruserdata
 .DS_Store
 wisc-elections-archive.Rproj
+.posit/assistant
+AGENTS.md
