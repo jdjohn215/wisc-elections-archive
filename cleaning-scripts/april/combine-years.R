@@ -16,8 +16,10 @@ all.files <- map_df(list.files("processed-data/april/annual", full.names = T, pa
 ################################################################################
 # standardize fields
 clean.results <- all.files |>
+  # munge 2012
+  mutate(reporting_unit = str_replace(reporting_unit, "RIVER FALLS RIVER FALLS SUPERVISORY DISTRICT ", "RIVER FALLS D")) |>
   separate(reporting_unit, into = c("municipality", "reporting_unit"), 
-           sep = " (?=WARD)| (?=WD)", extra = "merge") |>
+           sep = " (?=WARD)| (?=WD)| (?=D[1-9])", extra = "merge") |>
   mutate(reporting_unit = if_else(is.na(reporting_unit), "WARD 1", reporting_unit),
          across(where(is.character), str_to_upper),
          ctv = case_when(
