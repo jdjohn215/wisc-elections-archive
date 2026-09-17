@@ -61,7 +61,7 @@ clean.results <- all.files |>
 
 # confirm that fields uniquely identify rows
 multiples <- clean.results |>
-  group_by(county, municipality, ctv, year, reporting_unit, office, candidate) |>
+  group_by(county, municipality, ctv, year, reporting_unit, office, party, candidate) |>
   summarise(count = n()) |>
   filter(count > 1)
 nrow(multiples) == 0
