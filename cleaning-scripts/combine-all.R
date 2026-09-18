@@ -19,7 +19,19 @@ november <- read_csv("processed-data/november/AllElections_ReportingUnit.csv") |
     TRUE ~ "NOVEMBER"
   ))
 
-all.results <- bind_rows(february, april, august, november)
+all.results <- bind_rows(february, april, august, november) |>
+  # final edits
+  mutate(
+    district = case_when(
+      office == "REPRESENTATIVE IN CONGRESS DISTRICT 8 (SPECIAL)" ~ 8,
+      office %in% c("STATE ASSEMBLY", "STATE SENATE", "CONGRESS") ~ district,
+      TRUE ~ 0
+    ),
+    office = case_when(
+      office == "STATE SUPERINTENDENT OF PUBLIC INSTRUCTION" ~ "STATE SUPERINTENDENT",
+      office == "JUSTICE OF THE SUPREME COURT" ~ "SUPREME COURT",
+      TRUE ~ office
+    ))
 
 # confirm no duplicates
 all.results |> 
@@ -45,4 +57,5 @@ write_csv(all.results, "processed-data/AllResults_ReportingUnit.csv.gz")
 # write hive-partioned parquet dataset
 all.results |>
   group_by(year, month, office) |>
-  write_dataset(path = "processed-data/parquet/", format = "parquet")
+  write_dataset(path = "processed-data/parquet/", format = "parquet",
+                existing_data_behavior = "overwrite")
