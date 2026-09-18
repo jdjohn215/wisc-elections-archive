@@ -31,13 +31,24 @@ all.results <- bind_rows(february, april, august, november) |>
       office == "STATE SUPERINTENDENT OF PUBLIC INSTRUCTION" ~ "STATE SUPERINTENDENT",
       office == "JUSTICE OF THE SUPREME COURT" ~ "SUPREME COURT",
       TRUE ~ office
-    ))
+    ),
+    muni_fips = paste0("55", str_sub(mcd_fips, -5, -1))) |>
+  select(county_fips, muni_fips, mcd_fips, county, municipality, ctv, reporting_unit, everything())
 
 # confirm no duplicates
 all.results |> 
   group_by(mcd_fips, reporting_unit, year, month, office, district, party, candidate) |>
   filter(n() > 1)
+################################################################################
+# check place name consistency
+n_distinct(all.results$county)
+n_distinct(all.results$municipality)
+n_distinct(all.results$mcd_fips)
+all.results |> filter(is.na(mcd_fips))
 
+# these are MCD_FIPS codes with more than 1 name. This can legitimately happen
+# when a municipality incorporates (e.g. from a town to a village) or changes its name
+different.names <- all.results |> distinct(mcd_fips, county, ctv, municipality) |> group_by(mcd_fips) |> filter(n() > 1) |> arrange(mcd_fips)
 ################################################################################
 # coverage summary
 election.totals <- all.results |>
