@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wisconsin Election Results</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Wisconsin Election Results</h1>
+    <div class="selectors">
+      <label>Election
+        <input id="election" type="text" list="election-list" placeholder="Type to search&#x2026;" autocomplete="off">
+        <datalist id="election-list"></datalist>
+      </label>
+      <label>Contest <select id="office"></select></label>
+      <label id="party-label" hidden>Party <select id="party"></select></label>
+      <label id="district-label" hidden>District
+        <input id="district" type="text" list="district-list" placeholder="Type to search&#x2026;" autocomplete="off">
+        <datalist id="district-list"></datalist>
+      </label>
+      <div class="view-toggle">
+        <button id="view-map" class="active" type="button">Map</button>
+        <button id="view-table" type="button">Table</button>
+      </div>
+    </div>
+    <div id="map-controls" class="subcontrols">
+      <label>Geography
+        <select id="geography">
+          <option value="ru">Reporting unit</option>
+          <option value="mcd">Minor civil division</option>
+          <option value="muni">Municipality</option>
+          <option value="county">County</option>
+          <option value="con">Congressional district</option>
+          <option value="wss">State senate district</option>
+          <option value="wsa">State assembly district</option>
+        </select>
+      </label>
+    </div>
+    <div id="table-controls" class="subcontrols" hidden>
+      <label>Scope
+        <select id="scope-level">
+          <option value="statewide">Statewide</option>
+          <option value="county">County</option>
+          <option value="mcd">Minor civil division</option>
+          <option value="muni">Municipality</option>
+        </select>
+      </label>
+      <label id="scope-county-label" hidden>County
+        <input id="scope-county" type="text" list="scope-county-list" placeholder="Type to search&#x2026;" autocomplete="off">
+        <datalist id="scope-county-list"></datalist>
+      </label>
+      <label id="scope-mcd-label" hidden>Minor civil division
+        <input id="scope-mcd" type="text" list="scope-mcd-list" placeholder="Type to search&#x2026;" autocomplete="off">
+        <datalist id="scope-mcd-list"></datalist>
+      </label>
+      <label id="scope-muni-label" hidden>Municipality
+        <input id="scope-muni" type="text" list="scope-muni-list" placeholder="Type to search&#x2026;" autocomplete="off">
+        <datalist id="scope-muni-list"></datalist>
+      </label>
+    </div>
+  </header>
+  <main>
+    <div id="map"></div>
+    <div id="legend" hidden></div>
+    <div id="table-view" hidden>
+      <div id="table-summary"></div>
+      <div id="table-container"></div>
+    </div>
+  </main>
+  <div id="loading" hidden>Loading&hellip;</div>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/flatgeobuf@3.28.0/dist/flatgeobuf-geojson.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

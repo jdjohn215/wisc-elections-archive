@@ -1,0 +1,185 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #ddd;
+  background: #fafafa;
+}
+
+h1 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem;
+}
+
+.selectors, .subcontrols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+label {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+select {
+  font-size: 0.9rem;
+  padding: 0.2rem 0.3rem;
+  margin-left: 0.25rem;
+  max-width: 320px;
+}
+
+.selectors input {
+  font-size: 0.9rem;
+  padding: 0.2rem 0.3rem;
+  margin-left: 0.25rem;
+  width: 220px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+}
+
+#table-controls input {
+  font-size: 0.9rem;
+  padding: 0.2rem 0.3rem;
+  margin-left: 0.25rem;
+  width: 280px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+}
+
+.view-toggle {
+  margin-left: auto;
+}
+
+.view-toggle button {
+  font-size: 0.9rem;
+  padding: 0.25rem 0.9rem;
+  border: 1px solid #bbb;
+  background: #fff;
+  cursor: pointer;
+}
+
+.view-toggle button:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.view-toggle button:last-child {
+  border-radius: 0 4px 4px 0;
+  border-left: none;
+}
+
+.view-toggle button.active {
+  background: #2c5f8a;
+  border-color: #2c5f8a;
+  color: #fff;
+}
+
+main {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+
+#map {
+  position: absolute;
+  inset: 0;
+}
+
+#table-view {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: 1rem;
+}
+
+#table-summary {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+#table-summary .winner {
+  font-weight: 600;
+}
+
+table.results {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+table.results th, table.results td {
+  text-align: left;
+  padding: 0.3rem 0.9rem 0.3rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+table.results td.num, table.results th.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+table.results tr.scattering td {
+  color: #999;
+}
+
+#loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.8rem 1.4rem;
+  font-size: 0.95rem;
+  z-index: 10;
+}
+
+#legend {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  z-index: 5;
+  max-width: 280px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  flex: none;
+}
+
+.legend-note {
+  color: #777;
+  font-size: 0.72rem;
+  margin-top: 0.25rem;
+}
+
+.maplibregl-popup-content {
+  font-size: 0.85rem;
+  line-height: 1.4;
+}

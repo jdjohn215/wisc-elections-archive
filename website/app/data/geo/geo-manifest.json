@@ -1,0 +1,407 @@
+[
+  {
+    "key": "2026-APRIL",
+    "year": 2026,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2026-AUGUST",
+    "year": 2026,
+    "month": "AUGUST",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2022-2030",
+      "wss": "2024-2030",
+      "wsa": "2024-2030"
+    }
+  },
+  {
+    "key": "2025-APRIL",
+    "year": 2025,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2025-FEBRUARY",
+    "year": 2025,
+    "month": "FEBRUARY",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2024-APRIL",
+    "year": 2024,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2024-AUGUST",
+    "year": 2024,
+    "month": "AUGUST",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2022-2030",
+      "wss": "2024-2030",
+      "wsa": "2024-2030"
+    }
+  },
+  {
+    "key": "2024-NOVEMBER",
+    "year": 2024,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2022-2030",
+      "wss": "2024-2030",
+      "wsa": "2024-2030"
+    }
+  },
+  {
+    "key": "2023-APRIL",
+    "year": 2023,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2023-FEBRUARY",
+    "year": 2023,
+    "month": "FEBRUARY",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2022-AUGUST",
+    "year": 2022,
+    "month": "AUGUST",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2022-2030",
+      "wss": "2022",
+      "wsa": "2022"
+    }
+  },
+  {
+    "key": "2022-NOVEMBER",
+    "year": 2022,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2022-2030",
+      "wss": "2022",
+      "wsa": "2022"
+    }
+  },
+  {
+    "key": "2021-APRIL",
+    "year": 2021,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2021-FEBRUARY",
+    "year": 2021,
+    "month": "FEBRUARY",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2020-APRIL",
+    "year": 2020,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2020-AUGUST",
+    "year": 2020,
+    "month": "AUGUST",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2012-2020",
+      "wss": "2012-2020",
+      "wsa": "2012-2020"
+    }
+  },
+  {
+    "key": "2020-NOVEMBER",
+    "year": 2020,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2012-2020",
+      "wss": "2012-2020",
+      "wsa": "2012-2020"
+    }
+  },
+  {
+    "key": "2019-APRIL",
+    "year": 2019,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2018-APRIL",
+    "year": 2018,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2018-AUGUST",
+    "year": 2018,
+    "month": "AUGUST",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2012-2020",
+      "wss": "2012-2020",
+      "wsa": "2012-2020"
+    }
+  },
+  {
+    "key": "2018-FEBRUARY",
+    "year": 2018,
+    "month": "FEBRUARY",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2018-NOVEMBER",
+    "year": 2018,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2012-2020",
+      "wss": "2012-2020",
+      "wsa": "2012-2020"
+    }
+  },
+  {
+    "key": "2017-APRIL",
+    "year": 2017,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2017-FEBRUARY",
+    "year": 2017,
+    "month": "FEBRUARY",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2016-APRIL",
+    "year": 2016,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni", "ru"],
+    "districts": {}
+  },
+  {
+    "key": "2016-AUGUST",
+    "year": 2016,
+    "month": "AUGUST",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2012-2020",
+      "wss": "2012-2020",
+      "wsa": "2012-2020"
+    }
+  },
+  {
+    "key": "2016-NOVEMBER",
+    "year": 2016,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "ru", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2012-2020",
+      "wss": "2012-2020",
+      "wsa": "2012-2020"
+    }
+  },
+  {
+    "key": "2015-APRIL",
+    "year": 2015,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2014-NOVEMBER",
+    "year": 2014,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2012-2020",
+      "wss": "2012-2020",
+      "wsa": "2012-2020"
+    }
+  },
+  {
+    "key": "2013-APRIL",
+    "year": 2013,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2012-APRIL",
+    "year": 2012,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2012-JUNE",
+    "year": 2012,
+    "month": "JUNE",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2012-NOVEMBER",
+    "year": 2012,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2012-2020",
+      "wss": "2012-2020",
+      "wsa": "2012-2020"
+    }
+  },
+  {
+    "key": "2011-APRIL",
+    "year": 2011,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2010-NOVEMBER",
+    "year": 2010,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2002-2010",
+      "wss": "2002-2010",
+      "wsa": "2002-2010"
+    }
+  },
+  {
+    "key": "2009-APRIL",
+    "year": 2009,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2008-APRIL",
+    "year": 2008,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2008-NOVEMBER",
+    "year": 2008,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2002-2010",
+      "wss": "2002-2010",
+      "wsa": "2002-2010"
+    }
+  },
+  {
+    "key": "2007-APRIL",
+    "year": 2007,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2006-APRIL",
+    "year": 2006,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2006-NOVEMBER",
+    "year": 2006,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2002-2010",
+      "wss": "2002-2010",
+      "wsa": "2002-2010"
+    }
+  },
+  {
+    "key": "2005-APRIL",
+    "year": 2005,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2004-NOVEMBER",
+    "year": 2004,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2002-2010",
+      "wss": "2002-2010",
+      "wsa": "2002-2010"
+    }
+  },
+  {
+    "key": "2003-APRIL",
+    "year": 2003,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2002-NOVEMBER",
+    "year": 2002,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2002-2010",
+      "wss": "2002-2010",
+      "wsa": "2002-2010"
+    }
+  },
+  {
+    "key": "2001-APRIL",
+    "year": 2001,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2000-APRIL",
+    "year": 2000,
+    "month": "APRIL",
+    "geographies": ["county", "mcd", "muni"],
+    "districts": {}
+  },
+  {
+    "key": "2000-NOVEMBER",
+    "year": 2000,
+    "month": "NOVEMBER",
+    "geographies": ["county", "mcd", "muni", "con", "wss", "wsa"],
+    "districts": {
+      "con": "2000",
+      "wss": "2000",
+      "wsa": "2000"
+    }
+  }
+]
