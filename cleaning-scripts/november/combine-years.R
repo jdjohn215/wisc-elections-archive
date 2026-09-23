@@ -48,28 +48,28 @@ nrow(multiples) == 0
 
 ###############################################################################
 # compare each race's total votes, dem votes, and rep votes with the Leip Atlas
-leip.totals <- read_csv("processed-data/leip-wi-totals.csv") |>
-  mutate(office = str_to_upper(office))
-
-compare.with.leip <- full_join(
-  clean.results |>
-    filter(! office %in% c("STATE ASSEMBLY", "STATE SENATE")) |>
-    group_by(year, office, district, party) |>
-    summarise(votes = sum(votes)) |>
-    group_by(year, office, district) |>
-    mutate(total_vote = sum(votes)) |>
-    pivot_wider(names_from = party, values_from = votes) |>
-    select(year, office, district, total_vote, democratic = DEMOCRATIC, republican = REPUBLICAN) |>
-    pivot_longer(cols = -c(year, office, district), values_to = "my_total"),
-  leip.totals |>
-    pivot_longer(cols = -c(year, office, district), values_to = "leip_total")
-) |>
-  mutate(my_total = if_else(is.na(my_total), 0, my_total),
-         match = my_total == leip_total,
-         diff = my_total - leip_total)
-
-mismatch <- compare.with.leip |> filter(match == FALSE | is.na(match))
-mismatch |> group_by(year, office, district) |> summarise(count = n())
+# leip.totals <- read_csv("processed-data/leip-wi-totals.csv") |>
+#   mutate(office = str_to_upper(office))
+# 
+# compare.with.leip <- full_join(
+#   clean.results |>
+#     filter(! office %in% c("STATE ASSEMBLY", "STATE SENATE")) |>
+#     group_by(year, office, district, party) |>
+#     summarise(votes = sum(votes)) |>
+#     group_by(year, office, district) |>
+#     mutate(total_vote = sum(votes)) |>
+#     pivot_wider(names_from = party, values_from = votes) |>
+#     select(year, office, district, total_vote, democratic = DEMOCRATIC, republican = REPUBLICAN) |>
+#     pivot_longer(cols = -c(year, office, district), values_to = "my_total"),
+#   leip.totals |>
+#     pivot_longer(cols = -c(year, office, district), values_to = "leip_total")
+# ) |>
+#   mutate(my_total = if_else(is.na(my_total), 0, my_total),
+#          match = my_total == leip_total,
+#          diff = my_total - leip_total)
+# 
+# mismatch <- compare.with.leip |> filter(match == FALSE | is.na(match))
+# mismatch |> group_by(year, office, district) |> summarise(count = n())
 
 # 2016 CD 3 and 2018 CD 2 both have a few Republican votes in Leip because he
 #   classified a write-in "Republican" as the Republican candidate. In our data

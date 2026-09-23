@@ -6,12 +6,17 @@ library(tidyverse)
 
 ################################################################################
 # governor 2018
-gov.2018.orig <- readxl::read_excel("original-data/2018%20General%20Election%20Governor%20Contest%20Candidates%20with%20Districts.xlsx") |>
+gov.2018.orig <- readxl::read_excel("original-data/november/2018%20General%20Election%20Governor%20Contest%20Candidates%20with%20Districts.xlsx") |>
   janitor::clean_names()
 
 glimpse(gov.2018.orig)
 
 gov.2018.clean <- gov.2018.orig |>
+  # munge incorrect district assignment
+  mutate(assembly_district = if_else(reporting_unit_name == "Town of SOMERS Ward 2", "Assembly - District 64", assembly_district),
+         senate_district = if_else(reporting_unit_name == "TOWN OF SOMERS Ward 2", "State Senate - District 22", senate_district),
+         assembly_district = if_else(reporting_unit_name == "City of SHEBOYGAN Ward 29", "Assembly - District 27", assembly_district),
+         assembly_district = if_else(reporting_unit_name == "City of SHEBOYGAN Ward 31", "Assembly - District 27", assembly_district)) |>
   rename(wss_dist = senate_district, wsa_dist = assembly_district, con_dist = congressional_district) |>
   pivot_longer(cols = -c(county, muni, reporting_unit_name,
                          wss_dist, wsa_dist, con_dist),
@@ -68,7 +73,7 @@ gov.2018.clean |>
 
 ################################################################################
 # senate 2018
-sen.2018.orig <- readxl::read_excel("original-data/US%20Senator_WardByWard_withDistricts%202018%20General_0.xlsx") |>
+sen.2018.orig <- readxl::read_excel("original-data/november/US%20Senator_WardByWard_withDistricts%202018%20General_0.xlsx") |>
   janitor::clean_names() |>
   janitor::remove_empty("cols") |>
   filter(reporting_unit_name != "County Totals:",
@@ -110,7 +115,7 @@ sen.2018.clean |>
 ################################################################################
 # congress 2018
 read_cong_dist <- function(sheet){
-  dist <- readxl::read_excel("original-data/Ward%20by%20Ward%20Report-Gen%20Election-Congress_0.xlsx",
+  dist <- readxl::read_excel("original-data/november/Ward%20by%20Ward%20Report-Gen%20Election-Congress_0.xlsx",
                              sheet = sheet, col_names = F)
   
   districtno <- dist$...1[which(str_detect(dist$...1, "REPRESENTATIVE IN CONGRESS "))]
@@ -119,7 +124,7 @@ read_cong_dist <- function(sheet){
                           x2 = as.character(dist[colname.start + 1,])) |>
     mutate(colname = paste(x1, x2, sep = "_")) |>
     pull(colname)
-  readxl::read_excel("original-data/Ward%20by%20Ward%20Report-Gen%20Election-Congress_0.xlsx",
+  readxl::read_excel("original-data/november/Ward%20by%20Ward%20Report-Gen%20Election-Congress_0.xlsx",
                      sheet = sheet, skip = (colname.start + 1), col_names = dist.colnames) |>
     janitor::clean_names() |>
     janitor::remove_empty("cols") |>
@@ -208,7 +213,7 @@ con.2018.clean |>
 ################################################################################
 # state assembly 2018
 read_wsa_dist <- function(sheet){
-  thispath <- "original-data/2018_Ward%20by%20Ward%20Report-Gen%20Election-Assembly.xlsx"
+  thispath <- "original-data/november/2018_Ward%20by%20Ward%20Report-Gen%20Election-Assembly.xlsx"
   dist <- readxl::read_excel(thispath, sheet = sheet, col_names = F)
   
   districtno <- dist$...1[which(str_detect(dist$...1, "REPRESENTATIVE TO THE ASSEMBLY"))]
@@ -275,7 +280,7 @@ unique(all.wsa.dist.orig.2$party)
 ################################################################################
 # state senate 2018
 read_wss_dist <- function(sheet){
-  thispath <- "original-data/2018_Ward%20by%20Ward%20Report-Gen%20Election-State%20Senator.xlsx"
+  thispath <- "original-data/november/2018_Ward%20by%20Ward%20Report-Gen%20Election-State%20Senator.xlsx"
   dist <- readxl::read_excel(thispath, sheet = sheet, col_names = F)
   
   districtno <- dist$...1[which(str_detect(dist$...1, "STATE SENATOR DISTRICT"))]
@@ -380,4 +385,4 @@ all.2018 <- bind_rows(
          wss_dist = as.numeric(str_sub(wss_dist, -2, -1)),
          con_dist = as.numeric(str_sub(con_dist, -2, -1)))
 
-write_csv(all.2018, "processed-data/annual/2018.csv")
+write_csv(all.2018, "processed-data/november/annual/2018.csv")

@@ -87,14 +87,20 @@ rep.unit.dist.assignments <- clean.results |>
   left_join(clean.results |>
               filter(office == "CONGRESS") |>
               distinct(year, county, ctv, municipality, reporting_unit, con_dist = district)) |>
-  # for some reason a 0-vote reporting unit lacks a congressional district assingment, so I do it manually
+  # for some reason a 0-vote reporting unit lacks a congressional district assignment, so I do it manually
   mutate(con_dist = if_else(year == 2016 & county == "DANE" & ctv == "V" & municipality == "BROOKLYN" & reporting_unit == "WARD 3",
                             2, con_dist))
 
 # verify that every reporting unit is uniquely assigned to a single district
 nrow(rep.unit.dist.assignments) == nrow(distinct(rep.unit.dist.assignments, year, county, ctv, municipality, reporting_unit))
 
-clean.results.with.districts <- clean.results |> inner_join(rep.unit.dist.assignments)
+# Wisconsin Dells Ward 11 is assigned to inconsistent senate and assembly districts in 2016
+#   however, 0 votes were cast here, so I drop it from the analysis
+# Ditto for C Waukesha Ward 48 in 2018
+clean.results.with.districts <- clean.results |>
+  inner_join(rep.unit.dist.assignments) |>
+  filter(! (year == 2016 & municipality == "WISCONSIN DELLS" & reporting_unit == "WARD 11" & county == "COLUMBIA"),
+         ! (year == 2018 & municipality == "WAUKESHA" & reporting_unit == "WARD 48" & county == "WAUKESHA"))
 sum(clean.results.with.districts$votes) == sum(clean.results$votes)
 
 ###############################################################################

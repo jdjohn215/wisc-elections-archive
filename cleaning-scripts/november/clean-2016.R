@@ -6,13 +6,16 @@ library(tidyverse)
 
 ################################################################################
 # president 2016
-pres.2016.orig <- readxl::read_excel("original-data/PresidentContest_RecountResult_WardByWard_withDistricts.xlsx") |>
+pres.2016.orig <- readxl::read_excel("original-data/november/PresidentContest_RecountResult_WardByWard_withDistricts.xlsx") |>
   janitor::clean_names()
 
 glimpse(pres.2016.orig)
 
 # party information from: https://elections.wi.gov/sites/default/files/legacy/Statewide%2520Results%2520All%2520Offices%2520%2528post-Presidential%2520recount%2529.pdf
 pres.2016.clean <- pres.2016.orig |>
+  # munge incorrect district assignment
+  mutate(assembly_district = if_else(reporting_unit_text == "TOWN OF SOMERS Ward 2", "Assembly - District 64", assembly_district),
+         senate_district = if_else(reporting_unit_text == "TOWN OF SOMERS Ward 2", "State Senate - District 22", senate_district)) |>
   rename(con_dist = congressional_district, wss_dist = senate_district, wsa_dist = assembly_district) |>
   pivot_longer(cols = -c(county_name, municipality_name, reporting_unit_text,
                          con_dist, wss_dist, wsa_dist),
@@ -74,7 +77,7 @@ pres.2016.clean |>
 
 ################################################################################
 # senate 2016
-sen.2016.colnames <- readxl::read_excel("original-data/Ward%20by%20Ward%20Report%20-US%20Senator.xlsx",
+sen.2016.colnames <- readxl::read_excel("original-data/november/Ward%20by%20Ward%20Report%20-US%20Senator.xlsx",
                                         sheet = 2, col_names = FALSE,
                                         skip = 9, n_max = 2) |>
   mutate(rownum = row_number()) |>
@@ -83,7 +86,7 @@ sen.2016.colnames <- readxl::read_excel("original-data/Ward%20by%20Ward%20Report
   mutate(colname = paste(`1`, `2`, sep = "_")) |>
   pull(colname)
 
-sen.2016.orig <- readxl::read_excel("original-data/Ward%20by%20Ward%20Report%20-US%20Senator.xlsx",
+sen.2016.orig <- readxl::read_excel("original-data/november/Ward%20by%20Ward%20Report%20-US%20Senator.xlsx",
                                     sheet = 2, skip = 11,
                                     col_names = sen.2016.colnames) |>
   rename(county = 1, rep_unit = 2) |>
@@ -130,7 +133,7 @@ sen.2016.clean |>
 ################################################################################
 # congress 2016
 read_cong_dist <- function(sheet){
-  dist <- readxl::read_excel("original-data/Ward%20by%20Ward%20Report%20-Congress.xlsx",
+  dist <- readxl::read_excel("original-data/november/Ward%20by%20Ward%20Report%20-Congress.xlsx",
                              sheet = sheet, col_names = F)
   
   districtno <- dist$...1[which(str_detect(dist$...1, "REPRESENTATIVE IN CONGRESS"))]
@@ -139,7 +142,7 @@ read_cong_dist <- function(sheet){
                           x2 = as.character(dist[colname.start + 1,])) |>
     mutate(colname = paste(x1, x2, sep = "_")) |>
     pull(colname)
-  readxl::read_excel("original-data/Ward%20by%20Ward%20Report%20-Congress.xlsx",
+  readxl::read_excel("original-data/november/Ward%20by%20Ward%20Report%20-Congress.xlsx",
                      sheet = sheet, skip = (colname.start + 1), col_names = dist.colnames) |>
     janitor::clean_names() |>
     janitor::remove_empty("cols") |>
@@ -226,7 +229,7 @@ con.2016.clean |>
 ################################################################################
 # state assembly 2016
 read_wsa_dist <- function(sheet){
-  thispath <- "original-data/2016_Ward%20by%20Ward%20Report-Assembly.xlsx"
+  thispath <- "original-data/november/2016_Ward%20by%20Ward%20Report-Assembly.xlsx"
   dist <- readxl::read_excel(thispath, sheet = sheet, col_names = F)
   
   districtno <- dist$...1[which(str_detect(dist$...1, "REPRESENTATIVE TO THE ASSEMBLY"))]
@@ -290,10 +293,11 @@ all.wsa.dist.orig.2 |>
   filter(candidate > 1)
 unique(all.wsa.dist.orig.2$party)
 
+
 ################################################################################
 # state senate 2016
 read_wss_dist <- function(sheet){
-  thispath <- "original-data/2016_Ward%20by%20Ward%20Report-State%20Senate.xlsx"
+  thispath <- "original-data/november/2016_Ward%20by%20Ward%20Report-State%20Senate.xlsx"
   dist <- readxl::read_excel(thispath, sheet = sheet, col_names = F)
   
   districtno <- dist$...1[which(str_detect(dist$...1, "STATE SENATOR DISTRICT"))]
@@ -398,4 +402,4 @@ all.2016 <- bind_rows(
          wss_dist = as.numeric(str_sub(wss_dist, -2, -1)),
          con_dist = as.numeric(str_sub(con_dist, -2, -1)))
 
-write_csv(all.2016, "processed-data/annual/2016.csv")
+write_csv(all.2016, "processed-data/november/annual/2016.csv")
