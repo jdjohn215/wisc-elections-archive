@@ -3,19 +3,19 @@ rm(list = ls())
 library(tidyverse)
 
 # all results are in 1 excel workbook
-sheets.2012 <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+sheets.2012 <- readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                                   sheet = 1) |>
   mutate(sheetno = row_number() + 1)
 
 sheets.2012
 
-legis.dists <- read_csv("processed-data/annual/2010-2014-rep-unit-dists.csv") |>
+legis.dists <- read_csv("processed-data/november/annual/2010-2014-rep-unit-dists.csv") |>
   filter(year == 2012) |>
   select(-year)
 
 ################################################################################
 # president 2012
-pres.2012.colnames <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+pres.2012.colnames <- readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                                         sheet = 2, col_names = FALSE,
                                         skip = 8, n_max = 2) |>
   mutate(rownum = row_number()) |>
@@ -24,7 +24,7 @@ pres.2012.colnames <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.
   mutate(colname = paste(`1`, `2`, sep = "_")) |>
   pull(colname)
 
-pres.2012.orig <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+pres.2012.orig <- readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                                     sheet = 2, skip = 11,
                                     col_names = c("county", "rep_unit", pres.2012.colnames)) |>
   mutate(county = zoo::na.locf(county)) |>
@@ -82,7 +82,7 @@ pres.2012.clean |>
 
 ################################################################################
 # senator 2012
-sen.2012.colnames <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+sen.2012.colnames <- readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                                         sheet = 3, col_names = FALSE,
                                         skip = 8, n_max = 2) |>
   mutate(rownum = row_number()) |>
@@ -91,7 +91,7 @@ sen.2012.colnames <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.x
   mutate(colname = paste(`1`, `2`, sep = "_")) |>
   pull(colname)
 
-sen.2012.orig <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+sen.2012.orig <- readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                                     sheet = 3, skip = 11,
                                     col_names = c("county", "rep_unit", sen.2012.colnames)) |>
   mutate(county = zoo::na.locf(county)) |>
@@ -141,7 +141,7 @@ sen.2012.clean |>
 ################################################################################
 # congress 2012
 read_cong_dist <- function(sheet){
-  dist <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+  dist <- readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                              sheet = sheet, col_names = F)
   
   districtno <- dist$...1[8]
@@ -149,7 +149,7 @@ read_cong_dist <- function(sheet){
                           x2 = as.character(dist[11,])) |>
     mutate(colname = paste(x1, x2, sep = "_")) |>
     pull(colname)
-  readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+  readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                      sheet = sheet, skip = 11, col_names = dist.colnames) |>
     janitor::clean_names() |>
     janitor::remove_empty("cols") |>
@@ -219,6 +219,19 @@ con.2012.clean <- all.dist.orig |>
          municipality_name = word(municipality_name, 3, -1),
          district = word(district, -1))
 
+# weird cases where reporting unit appears in 2 districts
+#   fortunately, all these report 0 votes in one of the wards
+empty.multiples <- con.2012.clean |>
+  group_by(county, municipality_name, municipality_type, reporting_unit_name) |>
+  filter(n_distinct(district) > 1) |>
+  group_by(county, municipality_name, municipality_type, reporting_unit_name, district) |>
+  summarise(total_votes = sum(votes)) |>
+  filter(total_votes == 0) |>
+  ungroup() |>
+  select(county, municipality_name, municipality_type, reporting_unit_name)
+
+con.2012.clean <- anti_join(con.2012.clean, empty.multiples)
+
 con.2012.clean |>
   group_by(county, municipality_name, municipality_type, reporting_unit_name, candidate, district) |>
   filter(n() > 1)
@@ -232,7 +245,7 @@ con.2012.clean |>
 ################################################################################
 # state assembly 2012
 read_wsa_dist <- function(sheet){
-  dist <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+  dist <- readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                              sheet = sheet, col_names = F)
   
   districtno <- dist$...1[8]
@@ -240,7 +253,7 @@ read_wsa_dist <- function(sheet){
                           x2 = as.character(dist[11,])) |>
     mutate(colname = paste(x1, x2, sep = "_")) |>
     pull(colname)
-  readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+  readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                      sheet = sheet, skip = 11, col_names = dist.colnames) |>
     janitor::remove_empty("cols") |>
     rename(county = 1, rep_unit = 2) |>
@@ -318,7 +331,7 @@ all.wsa.dist.orig.3 <- anti_join(all.wsa.dist.orig.2, empty.multiples)
 ################################################################################
 # state senate 2012
 read_wss_dist <- function(sheet){
-  dist <- readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+  dist <- readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                              sheet = sheet, col_names = F)
   
   districtno <- dist$...1[8]
@@ -326,7 +339,7 @@ read_wss_dist <- function(sheet){
                           x2 = as.character(dist[11,])) |>
     mutate(colname = paste(x1, x2, sep = "_")) |>
     pull(colname)
-  readxl::read_excel("original-data/2012-11-06_Ward_by_Ward.xls",
+  readxl::read_excel("original-data/november/2012-11-06_Ward_by_Ward.xls",
                      sheet = sheet, skip = 11, col_names = dist.colnames) |>
     janitor::remove_empty("cols") |>
     rename(county = 1, rep_unit = 2) |>
@@ -422,7 +435,7 @@ all.2012 <- bind_rows(
          wsa_dist = unique(wsa_dist[office == "president"])) |>
   ungroup() |>
   # add 2012 gubernatorial recall (legislative districts not available)
-  bind_rows(read_csv("processed-data/annual/2012-gov.csv",
+  bind_rows(read_csv("processed-data/november/annual/2012-gov.csv",
                      col_types = "ccccnccccn"))
 
-write_csv(all.2012, "processed-data/annual/2012.csv")
+write_csv(all.2012, "processed-data/november/annual/2012.csv")
