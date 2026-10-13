@@ -33,7 +33,9 @@ all.results <- bind_rows(february, april, august, november) |>
       TRUE ~ office
     ),
     muni_fips = paste0("55", str_sub(mcd_fips, -5, -1))) |>
-  select(county_fips, muni_fips, mcd_fips, county, municipality, ctv, reporting_unit, everything())
+  select(year, month, county_fips, muni_fips, mcd_fips, county, municipality,
+         ctv, reporting_unit, office, district, con_dist, wss_dist, wsa_dist,
+         party, candidate, votes, total_votes)
 
 # confirm no duplicates
 all.results |> 
