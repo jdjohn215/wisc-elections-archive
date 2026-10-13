@@ -6,18 +6,29 @@ library(arrow)
 ################################################################################
 # the complete files for each election type
 february <- read_csv("processed-data/february/AllElections_ReportingUnit.csv") |>
-  mutate(month = "FEBRUARY")
+  mutate(month = "FEBRUARY",
+         contest = paste("NONPARTISAN PRIMARY", office, sep = "!!"))
 april <- read_csv("processed-data/april/AllElections_ReportingUnit.csv") |>
-  mutate(month = "APRIL")
+  mutate(month = "APRIL",
+         contest = paste(if_else(office == "PRESIDENT", paste(party, "PRIMARY"),
+                                 "GENERAL"), office, sep = "!!"))
 august <- read_csv("processed-data/august/AllElections_ReportingUnit.csv") |>
-  mutate(month = "AUGUST")
+  mutate(month = "AUGUST",
+         contest = paste(paste(party, "PRIMARY"),
+                         if_else(district == 0,
+                                 office,
+                                 paste(office, district)), sep = "!!"))
 november <- read_csv("processed-data/november/AllElections_ReportingUnit.csv") |>
   # set the month of the 2012 gubernatorial recall to June
   mutate(month = case_when(
     year != 2012 ~ "NOVEMBER",
     office == "GOVERNOR" ~ "JUNE",
     TRUE ~ "NOVEMBER"
-  ))
+  ),
+  contest = paste(paste("GENERAL",
+                  if_else(district == 0,
+                          office,
+                          paste(office, district)), sep = "!!")))
 
 all.results <- bind_rows(february, april, august, november) |>
   # final edits
@@ -34,7 +45,7 @@ all.results <- bind_rows(february, april, august, november) |>
     ),
     muni_fips = paste0("55", str_sub(mcd_fips, -5, -1))) |>
   select(year, month, county_fips, muni_fips, mcd_fips, county, municipality,
-         ctv, reporting_unit, office, district, con_dist, wss_dist, wsa_dist,
+         ctv, reporting_unit, office, district, contest, con_dist, wss_dist, wsa_dist,
          party, candidate, votes, total_votes)
 
 # confirm no duplicates
